@@ -1,0 +1,136 @@
+/* Base */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100%; }
+
+/* Paleta simples */
+:root{
+  --cinza-fundo-1: #aeb3b7;
+  --cinza-fundo-2: #99a0a5;
+  --borda: #1f2a22;
+
+  --verde-clarinho: #c3f0c6;
+  --verde: #85e789;
+  --verde-escuro: #2e7d32;
+
+  --amarelo-clarinho: #fff1c8;
+  --azul-clarinho: #b5dbff;
+}
+
+body {
+  font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  /* Fundo com leve degradê p/ dar vida */
+  background: linear-gradient(180deg, var(--cinza-fundo-1), var(--cinza-fundo-2));
+}
+
+/* Área do app com borda ao redor */
+.app{
+  height: 100%;
+  width: 100%;
+  border: 3px solid var(--borda);
+  border-radius: 16px;
+  background: #c2c7cb;
+  display: flex;
+  overflow: hidden;
+}
+
+/* Esquerda: logo centralizada */
+.coluna-logo{
+  width: 36%;
+  border-right: 3px solid var(--borda);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  /* leve cor para a área da logo */
+  background: linear-gradient(180deg, #abdbaf 0%, #cfe2d1 100%);
+}
+
+.marca { text-align: center; }
+
+/* NOVA fonte da logo */
+.titulo{
+  font-family: "Pacifico", cursive;
+  color: var(--verde-escuro);
+  font-size: 120px;
+  line-height: .92;
+  letter-spacing: .7px;
+  text-shadow: 0 1px 0 #ffffff;
+}
+
+.assinatura{
+  margin-top: 15px;
+  font-style: italic;
+  color: #1f3323;
+  opacity: .85;
+}
+
+/* Direita: grid simples (biblioteca maior) */
+.coluna-botoes{
+  flex: 1;
+  padding: 45px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 2fr 1fr;
+  grid-template-areas:
+    "biblioteca biblioteca"
+    "loja       streak";
+  gap: 30px;
+  /* fundo sutil com verde bem claro */
+  background: linear-gradient(180deg, #c9eb33 0%, #7dc26f 100%);
+}
+
+/* Cartões/botões – cor + sombra leve, sem “loucura” */
+.cartao{
+  border: 2px solid var(--borda);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: transform .2s ease, filter .15s ease;
+  box-shadow: 0 6px 12px rgba(0,0,0,.08);
+}
+.cartao:hover{ transform: translateY(-8px); filter: brightness(1.02); }
+
+.cartao-biblioteca{
+  grid-area: biblioteca;
+  background: var(--verde-clarinho);
+  border-color: var(--verde-escuro);
+}
+.cartao-loja{
+  grid-area: loja;
+  background: var(--amarelo-clarinho);
+  border-color: #b08a00;
+}
+.cartao-streak{
+  grid-area: streak;
+  background: var(--azul-clarinho);
+  border-color: #245f9a;
+}
+
+/* Conteúdo dos cartões */
+.icone{ font-size: clamp(28px, 4vw, 40px); }
+.texto{
+  font-size: 50px;
+  font-weight: 800;
+  color: #2a3b2b;
+  text-align: center;
+}
+
+/* Ícones de rodapé */
+.rodape-icones{
+    position:fixed;
+    right:20px; 
+    bottom:16px;
+    display:flex; 
+    gap:25px;
+  }
+  
+  .icone-opcao{
+    font-size:35px; line-height:1;
+    background:#fff; border:2px solid var(--borda);
+    border-radius:12px; padding:8px 10px;
+    box-shadow:2px 3px 0 #233; cursor:pointer;
+  }
+  .icone-opcao:hover{ transform:translateY(-1px); }

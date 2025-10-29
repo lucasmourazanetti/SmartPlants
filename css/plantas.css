@@ -1,0 +1,434 @@
+/*  Plantas — layout e estilos*/
+
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  background: #aeb3b7;
+}
+
+/* App com borda ao redor */
+.app {
+  height: 100%;
+  width: 100%;
+  border: 3px solid #222;
+  border-radius: 16px;
+  background: #bfc4c8;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Topo */
+.topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 3px solid #222;
+  background: #dfe7df;
+}
+
+.abas {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.aba {
+  border: 2px solid #222;
+  background: #fff;
+  padding: 8px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.aba.ativa {
+  background: #e8f5e9;
+  border-color: #2e7d32;
+  color: #1a3b1e;
+}
+
+.busca {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 12px;
+}
+
+.busca input {
+  border: 2px solid #222;
+  border-radius: 10px;
+  padding: 8px 12px;
+  width: 280px;
+  background: #fff;
+}
+
+.busca button,
+.voltar {
+  border: 2px solid #222;
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+/* Conteúdo principal */
+.conteudo {
+  flex: 1;
+  padding: 24px;
+  overflow: auto;
+}
+
+/* Grade de cartões — responsiva e centralizada */
+.grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Cartões das plantas */
+.cartao {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 2px solid #222;
+  border-radius: 14px;
+  background: #ffffff;
+  cursor: pointer;
+  padding: 12px;
+  transition: transform .12s ease, box-shadow .15s ease, background .15s ease;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .06);
+}
+
+.cartao:hover {
+  transform: translateY(-3px);
+  background: #f7faf7;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, .08);
+}
+
+/* animação simples ao salvar/atualizar */
+.cartao.recent {
+  animation: card-flash .8s ease-out;
+}
+@keyframes card-flash {
+  0% { box-shadow: 0 0 0 rgba(46,125,50,0); transform: translateY(-3px); }
+  30% { box-shadow: 0 0 0 6px rgba(46,125,50,0.18); }
+  100% { box-shadow: 0 10px 22px rgba(0,0,0,.08); }
+}
+
+/* Foto vertical dentro do cartão */
+.cartao .foto {
+  aspect-ratio: 3 / 4;
+  border: 2px solid #222;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #eef3f6, #e3e9ed);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.cartao .foto img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cartao .infos {
+  display: flex;
+  flex-direction: column;
+}
+
+.cartao .infos strong {
+  font-weight: 800;
+}
+
+.cartao .infos small {
+  opacity: .75;
+}
+
+/* Cartão de adicionar */
+.adicionar .foto {
+  background: #e8f5e9;
+  border-color: #2e7d32;
+}
+
+.adicionar .mais {
+  font-size: 54px;
+  color: #2e7d32;
+  line-height: 1;
+}
+
+/* ---------- VISOR (visualização em popup) ---------- */
+.visor {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, .38);
+  display: grid;
+  place-items: center;
+  z-index: 10;
+  animation: visor-fade .15s ease-out;
+}
+
+/* garantir que o atributo hidden sempre esconda o visor */
+.visor[hidden] {
+  display: none !important;
+}
+
+.visor-conteudo {
+  width: min(1100px, 92vw);
+  max-height: 90vh;
+  border: 3px solid #222;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #f7f9f7, #eef2ee);
+  display: grid;
+  grid-template-columns: 260px 1fr 260px;
+  grid-template-rows: auto 1fr auto;
+  gap: 12px;
+  padding: 12px;
+  position: relative;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .25);
+  animation: visor-pop .18s cubic-bezier(.2, .7, .2, 1);
+}
+
+.fechar {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border: 2px solid #222;
+  background: #fff;
+  border-radius: 10px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.painel-lateral {
+  border: 2px solid #222;
+  border-radius: 10px;
+  background: #fff;
+  padding: 10px;
+}
+
+.painel-lateral h3 {
+  margin-bottom: 6px;
+}
+
+.texto-lateral {
+  min-height: 180px;
+  white-space: pre-line;
+}
+
+.visualizacao {
+  grid-column: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.seta {
+  border: 2px solid #222;
+  background: #fff;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
+}
+
+.moldura-foto {
+  flex: 1;
+  border: 2px solid #222;
+  border-radius: 10px;
+  background: #e9eef1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 320px;
+}
+
+.moldura-foto img {
+  max-width: 100%;
+  max-height: 60vh;
+  object-fit: contain;
+}
+
+.legenda {
+  padding: 8px 10px;
+}
+
+.barra-inferior {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  padding-top: 4px;
+}
+
+.btn {
+  border: 2px solid #222;
+  background: #fff;
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.perigo {
+  background: #ffe5e5;
+  border-color: #b74a4a;
+}
+
+/* ---------- MODAL criar/editar (dialog) ---------- */
+.modal::backdrop {
+  background: rgba(0, 0, 0, .35);
+  backdrop-filter: blur(2px);
+}
+
+/*
+  Centrando os dialogs de forma robusta:
+  - margin: auto → centraliza no viewport na maioria dos navegadores
+  - não força width/height do dialog para evitar full-screen involuntário
+*/
+.modal {
+  border: none;
+  border-radius: 16px;
+  padding: 0;
+  margin: auto;
+}
+
+.modal[open] {
+  animation: visor-pop .18s cubic-bezier(.2, .7, .2, 1);
+}
+
+.formulario {
+  width: min(980px, 92vw);
+  border: 3px solid #222;
+  border-radius: 16px;
+  background: #f5f7f5;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+}
+
+.formulario h2 {
+  grid-column: 1 / -1;
+  margin-bottom: 4px;
+}
+
+.col-esq,
+.col-centro,
+.col-dir {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 600;
+}
+
+input[type="text"],
+input[type="date"],
+select,
+textarea {
+  border: 2px solid #222;
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: #fff;
+}
+
+.preview {
+  width: 100%;
+  height: 230px;
+  border: 2px dashed #222;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 64px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.acoes {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+/* ---------- MODAL confirmar exclusão ---------- */
+.caixa-confirm {
+  width: min(520px, 92vw);
+  border: 3px solid #222;
+  border-radius: 16px;
+  background: #f5f7f5;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .18);
+}
+
+.caixa-confirm h3 {
+  font-size: 20px;
+}
+
+.caixa-confirm p {
+  opacity: .9;
+}
+
+.caixa-confirm .acoes {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* ---------- Animações ---------- */
+@keyframes visor-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes visor-pop {
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
