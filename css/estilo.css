@@ -77,6 +77,9 @@ body {
   gap: 30px;
   /* fundo sutil com verde bem claro */
   background: linear-gradient(180deg, #c9eb33 0%, #7dc26f 100%);
+  /* permite posicionar ícones sem sobrepor conteúdo */
+  position: relative;
+  padding-bottom: 100px; /* reserva espaço para os ícones no rodapé */
 }
 
 /* Cartões/botões – cor + sombra leve, sem “loucura” */
@@ -90,8 +93,20 @@ body {
   cursor: pointer;
   transition: transform .2s ease, filter .15s ease;
   box-shadow: 0 6px 12px rgba(0,0,0,.08);
+  /* deixar <a> com aparência de botão, sem sublinhado/cor de link */
+  text-decoration: none;
+  color: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  user-select: none;
 }
 .cartao:hover{ transform: translateY(-8px); filter: brightness(1.02); }
+
+/* foco consistente para acessibilidade */
+.cartao:focus-visible{
+  outline: 3px solid var(--borda);
+  outline-offset: 2px;
+}
 
 .cartao-biblioteca{
   grid-area: biblioteca;
@@ -120,12 +135,12 @@ body {
 
 /* Ícones de rodapé */
 .rodape-icones{
-    position:fixed;
-    right:20px; 
-    bottom:16px;
-    display:flex; 
-    gap:25px;
-  }
+  position: absolute; /* fica dentro da coluna-botoes */
+  right: 20px;
+  bottom: 16px;
+  display: flex;
+  gap: 25px;
+}
   
   .icone-opcao{
     font-size:35px; line-height:1;

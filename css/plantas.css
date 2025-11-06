@@ -7,6 +7,20 @@
   box-sizing: border-box;
 }
 
+/* Paleta compartilhada com a Home (index) */
+:root{
+  --cinza-fundo-1: #aeb3b7;
+  --cinza-fundo-2: #99a0a5;
+  --borda: #1f2a22;
+
+  --verde-clarinho: #c3f0c6;
+  --verde: #85e789;
+  --verde-escuro: #2e7d32;
+
+  --amarelo-clarinho: #fff1c8;
+  --azul-clarinho: #b5dbff;
+}
+
 html,
 body {
   height: 100%;
@@ -14,16 +28,21 @@ body {
 
 body {
   font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
-  background: #aeb3b7;
+  /* mesmo fundo suave da Home */
+  background: linear-gradient(180deg, var(--cinza-fundo-1), var(--cinza-fundo-2));
 }
 
 /* App com borda ao redor */
 .app {
   height: 100%;
   width: 100%;
-  border: 3px solid #222;
+  border: 3px solid var(--borda);
   border-radius: 16px;
-  background: #bfc4c8;
+  /* fundo com cara de plantas: verdes bem suaves e orgânicos */
+  background:
+    radial-gradient(1100px 480px at -10% -12%, rgba(46,125,50,.06), rgba(46,125,50,0) 60%),
+    radial-gradient(1100px 480px at 110% -12%, rgba(133,231,137,.06), rgba(133,231,137,0) 62%),
+    linear-gradient(180deg, #eaf6ee 0%, #e1f0e6 55%, #d6eadc 100%);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -35,8 +54,9 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  border-bottom: 3px solid #222;
-  background: #dfe7df;
+  border-bottom: 3px solid var(--borda);
+  /* aproxima a barra do topo do visual da Home */
+  background: linear-gradient(180deg, #abdbaf 0%, #cfe2d1 100%);
 }
 
 .abas {
@@ -46,17 +66,18 @@ body {
 }
 
 .aba {
-  border: 2px solid #222;
-  background: #fff;
-  padding: 8px 16px;
   border-radius: 10px;
-  cursor: pointer;
+  border: 2px solid var(--borda);
+  background: #fff;
   font-weight: 700;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: large;
 }
 
 .aba.ativa {
   background: #e8f5e9;
-  border-color: #2e7d32;
+  border-color: var(--verde-escuro);
   color: #1a3b1e;
 }
 
@@ -68,7 +89,7 @@ body {
 }
 
 .busca input {
-  border: 2px solid #222;
+  border: 2px solid var(--borda);
   border-radius: 10px;
   padding: 8px 12px;
   width: 280px;
@@ -77,11 +98,41 @@ body {
 
 .busca button,
 .voltar {
-  border: 2px solid #222;
+  border: 2px solid var(--borda);
   background: #fff;
   border-radius: 10px;
   padding: 8px 10px;
   cursor: pointer;
+}
+
+/* Logo no topo (link para Home) – visual igual ao index, sem aparência de link */
+.logo-topo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.logo-topo:focus-visible {
+  outline: 3px solid var(--borda);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+.marca-mini {
+  font-family: "Pacifico", cursive;
+  color: var(--verde-escuro); /* mesmo tom do index */
+  font-size: 40px; /* um pouco maior para ficar mais chamativa */
+  line-height: .9;
+  letter-spacing: .7px;
+  text-shadow: 0 1px 0 #ffffff;
+  transition: transform .15s ease, text-shadow .2s ease, color .2s ease;
+}
+.logo-topo:hover .marca-mini,
+.logo-topo:focus-visible .marca-mini {
+  transform: translateY(-1px);
+  /* brilho sutil em verde para chamar atenção, mantendo a aparência */
+  text-shadow: 0 1px 0 #ffffff, 0 0 8px rgba(46,125,50,.28);
 }
 
 /* Conteúdo principal */
@@ -89,6 +140,8 @@ body {
   flex: 1;
   padding: 24px;
   overflow: auto;
+  /* leve realce no topo do conteúdo, mantendo a leitura */
+  background: radial-gradient(900px 340px at 50% -8%, rgba(46,125,50,.05), transparent 62%);
 }
 
 /* Grade de cartões — responsiva e centralizada */
@@ -104,14 +157,15 @@ body {
 .cartao {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  border: 2px solid #222;
+  gap: 12px;
+  border: 2px solid var(--borda);
   border-radius: 14px;
   background: #ffffff;
   cursor: pointer;
   padding: 12px;
   transition: transform .12s ease, box-shadow .15s ease, background .15s ease;
   box-shadow: 0 6px 14px rgba(0, 0, 0, .06);
+  height: 100%;
 }
 
 .cartao:hover {
@@ -133,7 +187,7 @@ body {
 /* Foto vertical dentro do cartão */
 .cartao .foto {
   aspect-ratio: 3 / 4;
-  border: 2px solid #222;
+  border: 2px solid var(--borda);
   border-radius: 10px;
   background: linear-gradient(180deg, #eef3f6, #e3e9ed);
   display: flex;
@@ -151,25 +205,35 @@ body {
 .cartao .infos {
   display: flex;
   flex-direction: column;
+  gap: 4px;
+  margin-top: 6px;
+  min-height: 46px; /* mantém altura do bloco de infos consistente */
 }
 
 .cartao .infos strong {
   font-weight: 800;
+  /* mantém em uma linha com reticências */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cartao .infos small {
   opacity: .75;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Cartão de adicionar */
 .adicionar .foto {
-  background: #e8f5e9;
-  border-color: #2e7d32;
+  background: var(--verde-clarinho);
+  border-color: var(--verde-escuro);
 }
 
 .adicionar .mais {
   font-size: 54px;
-  color: #2e7d32;
+  color: var(--verde-escuro);
   line-height: 1;
 }
 
@@ -182,6 +246,7 @@ body {
   place-items: center;
   z-index: 10;
   animation: visor-fade .15s ease-out;
+  backdrop-filter: blur(2px) saturate(1.02);
 }
 
 /* garantir que o atributo hidden sempre esconda o visor */
@@ -192,7 +257,7 @@ body {
 .visor-conteudo {
   width: min(1100px, 92vw);
   max-height: 90vh;
-  border: 3px solid #222;
+  border: 3px solid var(--borda);
   border-radius: 16px;
   background: linear-gradient(180deg, #f7f9f7, #eef2ee);
   display: grid;
@@ -209,7 +274,7 @@ body {
   position: absolute;
   top: 8px;
   right: 8px;
-  border: 2px solid #222;
+  border: 2px solid var(--borda);
   background: #fff;
   border-radius: 10px;
   padding: 6px 10px;
@@ -217,19 +282,23 @@ body {
 }
 
 .painel-lateral {
-  border: 2px solid #222;
-  border-radius: 10px;
-  background: #fff;
-  padding: 10px;
+  border: 2px solid var(--borda);
+  border-radius: 12px;
+  background: linear-gradient(180deg, #ffffff, #f7fbf7);
+  padding: 12px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
 }
 
 .painel-lateral h3 {
   margin-bottom: 6px;
+  color: var(--verde-escuro);
+  font-size: .95rem;
 }
 
 .texto-lateral {
   min-height: 180px;
   white-space: pre-line;
+  line-height: 1.35;
 }
 
 .visualizacao {
@@ -241,54 +310,80 @@ body {
 }
 
 .seta {
-  border: 2px solid #222;
+  border: 2px solid var(--borda);
   background: #fff;
   border-radius: 50%;
   width: 48px;
   height: 48px;
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, .1);
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
 }
 
+.seta:hover { background: var(--verde-clarinho); border-color: var(--verde-escuro); transform: translateY(-1px); }
+.seta:active { transform: translateY(0); }
+.seta:focus-visible { outline: 3px solid var(--borda); outline-offset: 2px; }
+
 .moldura-foto {
-  flex: 1;
-  border: 2px solid #222;
-  border-radius: 10px;
-  background: #e9eef1;
+  flex: 1 1 auto;
+  border: 2px solid var(--borda);
+  border-radius: 12px;
+  background: linear-gradient(180deg, #eef6f0, #e8f2ec);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  min-height: 320px;
+  /* altura fixa e responsiva para manter tamanho consistente entre imagens */
+  height: clamp(360px, 62vh, 520px);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
 }
 
 .moldura-foto img {
-  max-width: 100%;
-  max-height: 60vh;
+  width: 100%;
+  height: calc(100% - 34px); /* reserva espaço para a legenda */
   object-fit: contain;
 }
 
 .legenda {
-  padding: 8px 10px;
+  padding: 10px 12px;
+  min-height: 34px; /* legenda constante para não variar a altura do quadro */
+  width: 100%;
+  text-align: center;
+  border-top: 1px solid #dbe4db;
+  background: rgba(255,255,255,.72);
+  backdrop-filter: blur(1px);
 }
+.legenda strong { color: var(--verde-escuro); }
+.legenda span { opacity: .8; }
 
 .barra-inferior {
   grid-column: 1 / -1;
   display: flex;
   gap: 8px;
   justify-content: center;
-  padding-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid #dbe4db;
+  background: rgba(255,255,255,.6);
+  backdrop-filter: blur(2px);
 }
 
 .btn {
-  border: 2px solid #222;
+  border: 2px solid var(--borda);
   background: #fff;
   border-radius: 10px;
   padding: 8px 12px;
   cursor: pointer;
   font-weight: 700;
+  transition: transform .12s ease, filter .12s ease, background .12s ease, border-color .12s ease;
 }
+
+.btn:hover { transform: translateY(-1px); filter: brightness(1.02); }
+.btn:active { transform: translateY(0); }
+.btn:focus-visible { outline: 3px solid var(--borda); outline-offset: 2px; }
+.btn.primario { background: var(--verde-clarinho); border-color: var(--verde-escuro); }
+.btn.primario:hover { background: #b6e9ba; }
+.btn.perigo:hover { background: #ffdede; }
 
 .perigo {
   background: #ffe5e5;
@@ -319,7 +414,7 @@ body {
 
 .formulario {
   width: min(980px, 92vw);
-  border: 3px solid #222;
+  border: 3px solid var(--borda);
   border-radius: 16px;
   background: #f5f7f5;
   padding: 16px;
@@ -352,7 +447,7 @@ input[type="text"],
 input[type="date"],
 select,
 textarea {
-  border: 2px solid #222;
+  border: 2px solid var(--borda);
   border-radius: 10px;
   padding: 8px 10px;
   background: #fff;
@@ -361,7 +456,7 @@ textarea {
 .preview {
   width: 100%;
   height: 230px;
-  border: 2px dashed #222;
+  border: 2px dashed var(--borda);
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -388,7 +483,7 @@ textarea {
 /* ---------- MODAL confirmar exclusão ---------- */
 .caixa-confirm {
   width: min(520px, 92vw);
-  border: 3px solid #222;
+  border: 3px solid var(--borda);
   border-radius: 16px;
   background: #f5f7f5;
   padding: 16px;
