@@ -1,123 +1,154 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SmartPlants — Plantas</title>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="css/plantas.css" />
-</head>
-<body>
-  <div class="app">
-    <header class="topo">
-      <a class="logo-topo" href="index.html" aria-label="Voltar para Home">
-        <span class="marca-mini">Smart<br>Plants</span>
-      </a>
-      <nav class="abas">
-        <button class="aba ativa">Plantas</button>
-        <button class="aba">Lembretes</button>
-        <div class="busca">
-          <input id="campo-busca" type="text" placeholder="Pesquisar..." />
-          <button id="botao-filtro" title="Filtro">🔎</button>
-        </div>
-      </nav>
-    </header>
-
-    <main class="conteudo">
-      <section id="lista-plantas" class="grade">
-        <!-- renderizado pelo JS -->
-        <button id="cartao-adicionar" class="cartao adicionar" type="button">
-          <div class="foto"><span class="mais">＋</span></div>
-          <div class="infos"><strong>Adicionar Planta</strong><small>Clique para cadastrar</small></div>
-        </button>
-      </section>
-    </main>
-  </div>
-
-  <!-- VISOR (visualização) — diferente do modal de editar -->
-  <section id="visor" class="visor" hidden>
-    <div class="visor-conteudo">
-      <button id="fechar-visor" class="fechar" title="Fechar">✕</button>
-
-      <aside class="painel-lateral">
-        <h3>Ajudas</h3>
-        <div id="texto-ajudas" class="texto-lateral"></div>
-      </aside>
-
-      <div class="visualizacao">
-        <button id="anterior" class="seta seta-esq" title="Anterior">❮</button>
-        <div class="moldura-foto">
-          <img id="foto-grande" alt="Foto da planta" />
-          <div class="legenda">
-            <strong id="nome-grande">—</strong> · <span id="especie-grande">—</span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SmartPlants — Plantas</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/plantas.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="topo">
+        <a class="logo-topo" href="index.html" aria-label="Voltar para Home">
+          <span class="marca-mini">Smart<br />Plants</span>
+        </a>
+        <nav class="abas">
+          <button class="aba ativa">Plantas</button>
+          <button class="aba" id="botao_lembretes_principal">
+            <a
+              href="lembretes.html"
+              style="text-decoration: none; color: inherit"
+              >Lembretes</a
+            >
+          </button>
+          <div class="busca">
+            <input id="campo-busca" type="text" placeholder="Pesquisar..." />
+            <button id="botao-filtro" title="Filtro">🔎</button>
           </div>
-        </div>
-        <button id="proximo" class="seta seta-dir" title="Próxima">❯</button>
-      </div>
+        </nav>
+      </header>
 
-      <aside class="painel-lateral">
-        <h3>Descrição</h3>
-        <div id="texto-descricao" class="texto-lateral"></div>
-      </aside>
-
-      <div class="barra-inferior">
-        <button id="botao-editar" class="btn">✏️ Editar</button>
-        <button id="botao-lembretes" class="btn">⏰ Lembretes</button>
-        <button id="botao-excluir" class="btn perigo">🗑 Excluir</button>
-      </div>
+      <main class="conteudo">
+        <section id="lista-plantas" class="grade">
+          <!-- renderizado pelo JS -->
+          <button id="cartao-adicionar" class="cartao adicionar" type="button">
+            <div class="foto"><span class="mais">＋</span></div>
+            <div class="infos">
+              <strong>Adicionar Planta</strong
+              ><small>Clique para cadastrar</small>
+            </div>
+          </button>
+        </section>
+      </main>
     </div>
-  </section>
 
-  <!-- MODAL criar/editar (separado do visor) -->
-  <dialog id="modal-planta" class="modal">
-    <form id="form-planta" method="dialog" class="formulario">
-      <h2 id="titulo-modal">Nova Planta</h2>
+    <!-- VISOR (visualização) — diferente do modal de editar -->
+    <section id="visor" class="visor" hidden>
+      <div class="visor-conteudo">
+        <button id="fechar-visor" class="fechar" title="Fechar">✕</button>
 
-      <div class="col-esq">
-        <label>Nome <input type="text" id="nome" required /></label>
-        <label>Espécie <input type="text" id="especie" /></label>
-        <label>Data de aquisição <input type="date" id="data" /></label>
-        <label>Tipo de planta
-          <select id="tipo">
-            <option value="">Selecione…</option>
-            <option>Indoor</option><option>Outdoor</option>
-            <option>Suculenta</option><option>Cactos</option>
-            <option>Florífera</option><option>Ervas</option>
-          </select>
-        </label>
+        <aside class="painel-lateral">
+          <h3>Ajudas</h3>
+          <div id="texto-ajudas" class="texto-lateral"></div>
+        </aside>
+
+        <div class="visualizacao">
+          <button id="anterior" class="seta seta-esq" title="Anterior">
+            ❮
+          </button>
+          <div class="moldura-foto">
+            <img id="foto-grande" alt="Foto da planta" />
+            <div class="legenda">
+              <strong id="nome-grande">—</strong> ·
+              <span id="especie-grande">—</span>
+            </div>
+          </div>
+          <button id="proximo" class="seta seta-dir" title="Próxima">❯</button>
+        </div>
+
+        <aside class="painel-lateral">
+          <h3>Descrição</h3>
+          <div id="texto-descricao" class="texto-lateral"></div>
+        </aside>
+
+        <div class="barra-inferior">
+          <button id="botao-editar" class="btn">✏️ Editar</button>
+          <button id="botao-lembretes" class="btn">⏰ Lembrete</button>
+          <button id="botao-excluir" class="btn perigo">🗑 Excluir</button>
+        </div>
       </div>
+    </section>
 
-      <div class="col-centro">
-        <label class="foto-campo">
-          <input type="file" id="arquivo-foto" accept="image/*" hidden />
-          <div id="preview" class="preview" role="img">🪴</div>
-          <button type="button" id="btn-foto" class="btn">Escolher foto</button>
-        </label>
-      </div>
+    <!-- MODAL criar/editar (separado do visor) -->
+    <dialog id="modal-planta" class="modal">
+      <form id="form-planta" method="dialog" class="formulario">
+        <h2 id="titulo-modal">Nova Planta</h2>
 
-      <div class="col-dir">
-        <label>Descrição
-          <textarea id="descricao" rows="8" placeholder="Ex.: sol da manhã, rega 2x/semana…"></textarea>
-        </label>
-      </div>
+        <div class="col-esq">
+          <label>Nome <input type="text" id="nome" required /></label>
+          <label>Espécie <input type="text" id="especie" /></label>
+          <label>Data de aquisição <input type="date" id="data" /></label>
+          <label
+            >Tipo de planta
+            <select id="tipo">
+              <option value="">Selecione…</option>
+              <option>Indoor</option>
+              <option>Outdoor</option>
+              <option>Suculenta</option>
+              <option>Cactos</option>
+              <option>Florífera</option>
+              <option>Ervas</option>
+            </select>
+          </label>
+        </div>
 
-      <div class="acoes">
-        <button type="submit" class="btn primario">Salvar</button>
-        <button type="button" class="btn" id="cancelar">Cancelar</button>
-      </div>
+        <div class="col-centro">
+          <label class="foto-campo">
+            <input type="file" id="arquivo-foto" accept="image/*" hidden />
+            <div id="preview" class="preview" role="img">🪴</div>
+            <button type="button" id="btn-foto" class="btn">
+              Escolher foto
+            </button>
+          </label>
+        </div>
 
-      <input type="hidden" id="id-edicao" />
-    </form>
-  </dialog>
+        <div class="col-dir">
+          <label
+            >Descrição
+            <textarea
+              id="descricao"
+              rows="8"
+              placeholder="Ex.: sol da manhã, rega 2x/semana…"
+            ></textarea>
+          </label>
+        </div>
 
-  <!-- MODAL confirmação de exclusão (custom) -->
-  <dialog id="modal-confirmar" class="modal">
-    <div class="caixa-confirm">
-      <h3>Confirmar exclusão</h3>
-      <p id="confirm-mensagem">Tem certeza que deseja excluir?</p>
-      <div class="acoes">
-        <button type="button" class="btn" id="confirm-cancelar">Cancelar</button>
-        <button type="button" class="btn perigo" id="confirm-excluir">Excluir</button>
+        <div class="acoes">
+          <button type="submit" class="btn primario">Salvar</button>
+          <button type="button" class="btn" id="cancelar">Cancelar</button>
+        </div>
+
+        <input type="hidden" id="id-edicao" />
+      </form>
+    </dialog>
+
+    <!-- MODAL confirmação de exclusão (custom) -->
+    <dialog id="modal-confirmar" class="modal">
+      <div class="caixa-confirm">
+        <h3>Confirmar exclusão</h3>
+        <p id="confirm-mensagem">Tem certeza que deseja excluir?</p>
+        <div class="acoes">
+          <button type="button" class="btn" id="confirm-cancelar">
+            Cancelar
+          </button>
+          <button type="button" class="btn perigo" id="confirm-excluir">
+            Excluir
+          </button>
+        </div>
       </div>
     </div>
   </dialog>
