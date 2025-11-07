@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SmartPlants — Plantas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/loja.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topo">
+      <a class="logo-topo" href="index.html" aria-label="Voltar para Home">
+        <span class="marca-mini">Smart<br>Plants</span>
+      </a>
+      <nav class="abas">
+        <button class="aba ativa">Fundos</button>
+        <a href="loja_fontes.html" class="aba">Fontes</a>
+        <button class="aba">Temas</button>
+        <div class="carteira">
+            🍃<span id="carteira-folhas">0</span>
+        </div>
+        <div class="busca">
+          <input id="campo-busca" type="text" placeholder="Pesquisar..." />
+          <button id="botao-filtro" title="Filtro">🔎</button>
+        </div>
+      </nav>
+    </header>
+
+    <main class="conteudo">
+      <section id="lista-fundos" class="grade">
+        <button id="btnFundo1" class="cartao" type="button">
+          <div class="foto"><img src="img\fundos\bliss.jpg"></div>
+          <div class="infos"><strong>Calm</strong>
+        </button>
+        <button id="btnFundo2" class="cartao" type="button">
+          <div class="foto"><img src="img\fundos\azul.webp"></div>
+          <div class="infos"><strong>Azure</strong>
+        </button>
+        <button id="btnFundo3" class="cartao" type="button">
+          <div class="foto"><img src="img\fundos\ascent.jpg"></div>
+          <div class="infos"><strong>Climb</strong>
+        </button>
+        <button id="btnFundo4" class="cartao" type="button">
+          <div class="foto"><img src="img\fundos\autumn.webp"></div>
+          <div class="infos"><strong>Fall</strong>
+        </button>
+        <button id="btnFundo5" class="cartao" type="button">
+          <div class="foto"><img src="img\fundos\cavemanufacture.jpg"></div>
+          <div class="infos"><strong>CaveManufacture</strong>
+        </button>
+        <button id="btnFundo6" class="cartao" type="button">
+          <div class="foto"><img src="img\fundos\Alwaysbrain.jpg"></div>
+          <div class="infos"><strong>Alwaysbrain</strong>
+        </button>
+        <button id="btnFundo7" class="cartao" type="button">
+          <div class="foto"></div>
+          <div class="infos"><strong>Adicionar Planta</strong>
+        </button><button id="btnFundo8" class="cartao" type="button">
+          <div class="foto"></div>
+          <div class="infos"><strong>Adicionar Planta</strong>
+        </button>
+      </section>
+    </main>
+  </div>
+  <script src="js/fontes.js"></script>
+  <script src="js/fundo.js"></script>
+</body>
+</html>
