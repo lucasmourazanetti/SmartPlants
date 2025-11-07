@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280, height=720, initial-scale=1.0">
+  <title>Calendário de Cuidados </title>
+  <link rel="stylesheet" href="pao.css">
+  
+</head>
+<body class="bodycal">
+  <header class="topocal">
+    <a class="voltar" href="index.html" title="Voltar para Home">↩</a>
+  </header>
+  <div class="calendar-wrapper">
+   
+   
+  <div class="plant-video-container" id="plantVideoContainer">
+   <video id="plantVideo" class="plant-video" preload="auto" muted>
+    <source src="plant-20761_256.mp4" type="video/mp4">
+    O teu navegador não suporta vídeo.
+   </video>
+   <div class="streak-overlay" id="streakText">5</div>
+  </div>
+
+    <header class="cabecalho-calendario">
+      <h1 id="monthYear"></h1>
+      <a href="plantas.html" class="btn">Cuidar das Plantas 🌱</a>
+    </header>
+
+    <div class="semana">
+      <div>S</div>
+      <div>T</div>
+      <div>Q</div>
+      <div>Q</div>
+      <div>S</div>
+      <div>S</div>
+      <div>D</div>
+    </div>
+
+    <div class="calendar" id="calendar"></div>
+  </div>
+  
+  <script src="pao.js"></script>
+</body>
+</html>
