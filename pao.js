@@ -57,10 +57,6 @@ function calcularStreak() {
   return streakCount;
 }
 
-
-
-generateCalendar();
-
 function showPlantVideo(streakCount) {
   const container = document.getElementById("plantVideoContainer");
   const video = document.getElementById("plantVideo");
@@ -83,3 +79,27 @@ const streak = calcularStreak();
 if (streak > 0) showPlantVideo(streak);
 // Exemplo:
 showPlantVideo(8);
+function atualizarCalendarioDeCuidados() {
+  const regas = JSON.parse(localStorage.getItem("regas")) || {};
+  const hoje = new Date().toISOString().split("T")[0];
+  const todasPlantas = JSON.parse(localStorage.getItem("plantas")) || []; // se guardas as plantas
+
+  const regadasHoje = regas[hoje] || [];
+
+  let status;
+  if (regadasHoje.length === 0) {
+    status = "missed"; // vermelho
+  } else if (regadasHoje.length < todasPlantas.length) {
+    status = "partial"; // laranja
+  } else {
+    status = "done"; // verde
+  }
+
+  // Atualiza o calendário no localStorage
+  const date = new Date();
+  const key = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+  const streakData = JSON.parse(localStorage.getItem("streakData")) || {};
+  streakData[key] = status;
+
+  localStorage.setItem("streakData", JSON.stringify(streakData));
+}

@@ -12,7 +12,12 @@ plantas = [
     { nome:'Manjericão', especie:'Ficus lyrata', data: '2023-02-01', descricao:'Prefere luminosidade alta.', tipo:'Indoor', foto:'img/exemplos/manjericao.jpg' },
     { nome:'Lavanda', especie:'Lavandula', data: '2023-03-01', descricao:'Gosta de sol e solo drenado.', tipo:'Outdoor', foto:'img/exemplos/lavanda.jpg' }
 ];
+plantas = plantas.map((p, i) => ({
+  id: p.id || `planta-${i + 1}-${Date.now()}`,
+  ...p
+}));
   setPlantas(plantas);
+  localStorage.setItem('todasPlantas', JSON.stringify(plantas));
 } else {
   // Migração: se exemplos conhecidos estão sem foto, define imagens padrão
   let ajustou = false;
@@ -138,6 +143,8 @@ function abrirVisor(indice) {
 function atualizarVisor() {
   const p = plantas[indiceAtual];
   if (!p) return;
+
+  // Atualiza foto
   if (p.foto) {
     fotoGrande.src = p.foto;
     fotoGrande.style.display = 'block';
@@ -145,22 +152,36 @@ function atualizarVisor() {
     fotoGrande.removeAttribute('src');
     fotoGrande.style.display = 'none';
   }
+
+  // Atualiza texto
   nomeGrande.textContent = p.nome || 'Sem nome';
   especieGrande.textContent = p.especie || '';
-  // Painel direito: descrição + informações
+
+  // Painel direito: descrição + infos
   const infos = [
     p.especie ? `<strong>Espécie:</strong> ${p.especie}` : '',
     p.tipo ? `<strong>Tipo:</strong> ${p.tipo}` : '',
     p.data ? `<strong>Desde:</strong> ${p.data}` : ''
   ].filter(Boolean).join('<br>');
-  textoDescricao.innerHTML = `${p.descricao ? `<p>${p.descricao}</p>` : ''}${infos ? `<div style="margin-top:6px">${infos}</div>` : ''}` || '—';
-  // Painel esquerdo: ajudas rápidas por tipo
+
+  textoDescricao.innerHTML =
+    `${p.descricao ? `<p>${p.descricao}</p>` : ''}${infos ? `<div style="margin-top:6px">${infos}</div>` : ''}` || '—';
+
+  // Painel esquerdo: dicas rápidas
   let dica = 'Cuidados: rega conforme necessidade.';
-  const t = (p.tipo||'').toLowerCase();
-  if (t.includes('sucu') || t.includes('cacto')) dica = 'Luz forte, pouca água. Regue só quando o solo secar.';
-  else if (t.includes('indoor')) dica = 'Luz indireta e rega moderada. Evite sol direto.';
-  else if (t.includes('out')) dica = 'Prefere sol parcial e solo bem drenado.';
-  textoAjudas.textContent = `• ${dica}` + `\n• Verifique drenagem do vaso.` + `\n• Limpe folhas periodicamente.`;
+  const t = (p.tipo || '').toLowerCase();
+  if (t.includes('sucu') || t.includes('cacto'))
+    dica = 'Luz forte, pouca água. Regue só quando o solo secar.';
+  else if (t.includes('indoor'))
+    dica = 'Luz indireta e rega moderada. Evite sol direto.';
+  else if (t.includes('out'))
+    dica = 'Prefere sol parcial e solo bem drenado.';
+
+  textoAjudas.textContent =
+    `• ${dica}\n• Verifique drenagem do vaso.\n• Limpe folhas periodicamente.`;
+
+  // 🟦 Atualiza o estado do botão "Regar" para esta planta
+  atualizarEstadoBotao(p.id);
 }
 
 function fecharVisorFn(){ visor.hidden = true; }
@@ -287,3 +308,92 @@ form.addEventListener('submit', (e)=>{
 
 /* iniciar */
 renderizar();
+
+const botaoRegar = document.getElementById("botao-regar");
+
+botaoRegar?.addEventListener("click", () => {
+  const plantaAtual = plantas[indiceAtual]; // planta atualmente aberta no visor
+  if (!plantaAtual || !plantaAtual.id) return;
+
+  marcarPlantaRegada(plantaAtual.id);
+  atualizarEstadoBotao(plantaAtual.id);
+  verificarTodasRegadasHoje();
+});
+
+function marcarPlantaRegada(plantaId) {
+  const hoje = new Date().toISOString().split("T")[0];
+  const regas = JSON.parse(localStorage.getItem("regas")) || {};
+
+  if (!regas[hoje]) regas[hoje] = [];
+
+  // Só adiciona se ainda não estiver marcada
+  if (!regas[hoje].includes(plantaId)) {
+    regas[hoje].push(plantaId);
+  }
+
+  localStorage.setItem("regas", JSON.stringify(regas));
+
+  verificarTodasRegadasHoje();
+}
+function verificarTodasRegadasHoje() {
+  const hoje = new Date();
+  const dataKey = `${hoje.getFullYear()}-${hoje.getMonth()}-${hoje.getDate()}`;
+  const todasPlantas = JSON.parse(localStorage.getItem('todasPlantas')) || [];
+  const regas = JSON.parse(localStorage.getItem('regas')) || {};
+
+  const regadasHoje = regas[hoje.toISOString().split('T')[0]] || [];
+
+  let streakData = JSON.parse(localStorage.getItem('streakData')) || {};
+
+  if (todasPlantas.length === 0) return;
+
+  if (regadasHoje.length === 0) {
+    streakData[dataKey] = 'missed';
+  } else if (regadasHoje.length < todasPlantas.length) {
+    streakData[dataKey] = 'partial';
+  } else {
+    streakData[dataKey] = 'done';
+  }
+
+  localStorage.setItem('streakData', JSON.stringify(streakData));
+}
+function marcarBotaoComoRegado(plantaId) {
+  const hoje = new Date().toISOString().split('T')[0];
+  const regas = JSON.parse(localStorage.getItem('regas')) || {};
+  const regadasHoje = regas[hoje] || [];
+
+  if (regadasHoje.includes(plantaId)) {
+    botaoRegar.classList.add("regada");
+    botaoRegar.textContent = "✅ Regada!";
+  } else {
+    botaoRegar.classList.remove("regada");
+    botaoRegar.textContent = "Regar";
+  }
+}
+
+function atualizarEstadoBotao(plantaId) {
+  const hoje = new Date().toISOString().split("T")[0];
+  const regas = JSON.parse(localStorage.getItem("regas")) || {};
+  const regadasHoje = regas[hoje] || [];
+
+  if (regadasHoje.includes(plantaId)) {
+    botaoRegar.classList.add("regada");
+    botaoRegar.textContent = "✅ Regada!";
+  } else {
+    botaoRegar.classList.remove("regada");
+    botaoRegar.textContent = "Regar";
+  }
+}
+function limparRegasAntigas() {
+  const hoje = new Date().toISOString().split('T')[0];
+  const regas = JSON.parse(localStorage.getItem('regas')) || {};
+
+  // Mantém apenas o registo do dia atual
+  const novas = {};
+  if (regas[hoje]) novas[hoje] = regas[hoje];
+
+  localStorage.setItem('regas', JSON.stringify(novas));
+}
+
+// Executa ao iniciar o site
+limparRegasAntigas();
