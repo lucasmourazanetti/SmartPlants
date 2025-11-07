@@ -3,51 +3,50 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SmartPlants — Plantas</title>
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  <title>SmartPlants — Lembretes</title>
   <link rel="stylesheet" href="css/plantas.css" />
+  <link rel="stylesheet" href="css/lembretes.css" />
 </head>
 <body>
   <div class="app">
     <header class="topo">
-      <a class="logo-topo" href="index.html" aria-label="Voltar para Home">
-        <span class="marca-mini">Smart<br>Plants</span>
-      </a>
       <nav class="abas">
-        <button class="aba ativa">Plantas</button>
-        <button class="aba" id="botao_lembretes_principal"><a href="lembretes.html">Lembretes</a></button>
+        <button class="aba" id="botao_plantas_principal"><a href="plantas.html">Plantas</a></button>
+        <button class="aba ativa">Lembretes</button>
         <div class="busca">
           <input id="campo-busca" type="text" placeholder="Pesquisar..." />
           <button id="botao-filtro" title="Filtro">🔎</button>
         </div>
       </nav>
+      <a class="voltar" href="index.html" title="Voltar para Home">↩</a>
     </header>
 
     <main class="conteudo">
-      <section id="lista-plantas" class="grade">
-        <!-- renderizado pelo JS -->
+      <section id="lista_lembretes" class="grade">
         <button id="cartao-adicionar" class="cartao adicionar" type="button">
           <div class="foto"><span class="mais">＋</span></div>
-          <div class="infos"><strong>Adicionar Planta</strong><small>Clique para cadastrar</small></div>
+          <div class="infos">
+            <strong>Adicionar Lembrete</strong><small>Clique para cadastrar</small>
+          </div>
         </button>
       </section>
     </main>
   </div>
 
-  <!-- VISOR (visualização) — diferente do modal de editar -->
+  <!-- VISOR -->
   <section id="visor" class="visor" hidden>
     <div class="visor-conteudo">
       <button id="fechar-visor" class="fechar" title="Fechar">✕</button>
 
       <aside class="painel-lateral">
-        <h3>Ajudas</h3>
-        <div id="texto-ajudas" class="texto-lateral"></div>
+        <h3>Hora Marcada</h3>
+        <div id="texto-horas-marcada" class="texto-lateral"></div>
       </aside>
 
       <div class="visualizacao">
         <button id="anterior" class="seta seta-esq" title="Anterior">❮</button>
         <div class="moldura-foto">
-          <img id="foto-grande" alt="Foto da planta" />
+          <img id="foto-grande" alt="Foto do lembrete" />
           <div class="legenda">
             <strong id="nome-grande">—</strong> · <span id="especie-grande">—</span>
           </div>
@@ -57,32 +56,29 @@
 
       <aside class="painel-lateral">
         <h3>Descrição</h3>
-        <div id="texto-descricao" class="texto-lateral"></div>
+        <div id="texto-descricao-lembrete" class="texto-lateral"></div>
       </aside>
 
       <div class="barra-inferior">
-        <button id="botao-editar" class="btn">✏️ Editar</button>
-        <button id="botao-lembretes" class="btn">⏰ Lembrete</button>
+        <button id="botao-editar-lembrete" class="btn">✏️ Editar</button>
         <button id="botao-excluir" class="btn perigo">🗑 Excluir</button>
       </div>
     </div>
   </section>
 
-  <!-- MODAL criar/editar (separado do visor) -->
-  <dialog id="modal-planta" class="modal">
-    <form id="form-planta" method="dialog" class="formulario">
-      <h2 id="titulo-modal">Nova Planta</h2>
-
+  <!-- MODAL CRIAR/EDITAR -->
+  <dialog id="modal-criar-lembrete" class="modal">
+    <form id="form-criar-lembrete" method="dialog" class="formulario">
+      <h2 id="titulo-modal">Novo Lembrete</h2>
       <div class="col-esq">
-        <label>Nome <input type="text" id="nome" required /></label>
-        <label>Espécie <input type="text" id="especie" /></label>
-        <label>Data de aquisição <input type="date" id="data" /></label>
-        <label>Tipo de planta
-          <select id="tipo">
+        <label>Nome<input id="nome" type="text" required /></label>
+        <label>Hora<input id="campo-hora" type="time" required /></label>
+        <label>Frequência do Lembrete
+          <select id="frequencia-lembrete" required>
             <option value="">Selecione…</option>
-            <option>Indoor</option><option>Outdoor</option>
-            <option>Suculenta</option><option>Cactos</option>
-            <option>Florífera</option><option>Ervas</option>
+            <option>Diariamente</option>
+            <option>Semanalmente</option>
+            <option>Mensalmente</option>
           </select>
         </label>
       </div>
@@ -90,14 +86,14 @@
       <div class="col-centro">
         <label class="foto-campo">
           <input type="file" id="arquivo-foto" accept="image/*" hidden />
-          <div id="preview" class="preview" role="img">🪴</div>
+          <div id="preview" class="preview" role="img">📜</div>
           <button type="button" id="btn-foto" class="btn">Escolher foto</button>
         </label>
       </div>
 
       <div class="col-dir">
         <label>Descrição
-          <textarea id="descricao" rows="8" placeholder="Ex.: sol da manhã, rega 2x/semana…"></textarea>
+          <textarea id="descricao" rows="5"></textarea>
         </label>
       </div>
 
@@ -110,7 +106,7 @@
     </form>
   </dialog>
 
-  <!-- MODAL confirmação de exclusão (custom) -->
+  <!-- MODAL CONFIRMAR EXCLUSÃO -->
   <dialog id="modal-confirmar" class="modal">
     <div class="caixa-confirm">
       <h3>Confirmar exclusão</h3>
@@ -122,6 +118,26 @@
     </div>
   </dialog>
 
-  <script src="js/plantas.js"></script>
+  <!-- Popup de Notificação de Lembrete -->
+  <div id="popup-lembrete" class="popup-lembrete" hidden>
+    <div class="popup-conteudo">
+      <div class="popup-foto">
+        <img id="popup-foto-img" src="" alt="Foto do lembrete" />
+      </div>
+      <div class="popup-texto">
+        <h3 id="popup-nome">Lembrete</h3>
+        <p id="popup-descricao">Descrição aqui...</p>
+        <div class="popup-acoes">
+          <button id="popup-jaesta" class="btn primario">Já está!</button>
+          <button id="popup-fechar" class="btn">✖</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="js/lembretes.js"></script>
 </body>
 </html>
+
+
