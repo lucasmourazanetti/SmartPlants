@@ -527,3 +527,9 @@ textarea {
     transform: translateY(0) scale(1);
   }
 }
+
+@font-face {
+  font-family: 'Determination';
+  src: url('../fonts/DeterminationMonoWebRegular-Z5oq.ttf') format('truetype');
+  font-display: swap;
+}

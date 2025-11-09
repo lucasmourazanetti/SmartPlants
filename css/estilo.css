@@ -149,3 +149,9 @@ body {
     box-shadow:2px 3px 0 #233; cursor:pointer;
   }
   .icone-opcao:hover{ transform:translateY(-1px); }
+
+  @font-face {
+  font-family: 'Determination';
+  src: url('../fonts/DeterminationMonoWebRegular-Z5oq.ttf') format('truetype');
+  font-display: swap;
+}
