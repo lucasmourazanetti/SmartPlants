@@ -163,14 +163,28 @@ function novoCadastro() {
   // Verifica se veio da planta
   const params = new URLSearchParams(window.location.search);
   const fotoParam = params.get('foto');
+  const nomeParam = params.get('nome');
+  const autoParam = params.get('auto');
+
   if (fotoParam) {
     preview.innerHTML = `<img src="${fotoParam}" alt="Foto">`;
     preview.dataset.src = fotoParam;
   }
 
+  if (nomeParam) {
+    inputNome.value = nomeParam;
+  }
+
   openDialog(modal);
-  setTimeout(() => inputNome.focus(), 50);
+
+  // Se veio da planta (auto=true), foca direto na hora
+  if (autoParam === 'true') {
+    setTimeout(() => inputHora.focus(), 50);
+  } else {
+    setTimeout(() => inputNome.focus(), 50);
+  }
 }
+
 
 function abrirEdicao(i) {
   const l = lembretes[i];
@@ -257,13 +271,25 @@ btnJaEsta.addEventListener('click', () => {
     const hoje = new Date();
     const prox = new Date(hoje);
 
-    if (/semanal/i.test(l.freq)) prox.setDate(hoje.getDate() + 7);
-    else if (/mensal/i.test(l.freq)) prox.setMonth(hoje.getMonth() + 1);
-    else prox.setDate(hoje.getDate() + 1);
+    if (/uma vez/i.test(l.freq)) {
+      // Se for lembrete de uma vez, remove-o
+      lembretes.splice(idx, 1);
+    } 
+    else {
+      // Caso contrário, reagenda normalmente
+      const hoje = new Date();
+      const prox = new Date(hoje);
 
-    lembretes[idx].proximaData = prox.toISOString().split('T')[0];
-    lembretes[idx].ultimoAviso = hoje.toISOString().split('T')[0]; // 👈 passo 2 aqui!
+      if (/semanal/i.test(l.freq)) prox.setDate(hoje.getDate() + 7);
+      else if (/mensal/i.test(l.freq)) prox.setMonth(hoje.getMonth() + 1);
+      else prox.setDate(hoje.getDate() + 1);
+
+      lembretes[idx].proximaData = prox.toISOString().split('T')[0];
+      lembretes[idx].ultimoAviso = hoje.toISOString().split('T')[0];
+    }
+
     setLembretes(lembretes);
+    renderizar();
   }
 
 });
@@ -294,6 +320,28 @@ setInterval(verificarLembretes, 10 * 1000);
 
 // também verifica imediatamente ao abrir a página
 verificarLembretes();
+
+// --- Verifica se veio da página de plantas e abre o modal automaticamente ---
+window.addEventListener('DOMContentLoaded', () => {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('novo') === '1') {
+    const nome = params.get('nome') || '';
+    const foto = params.get('foto') || '';
+
+    // abre o modal e pré-preenche nome/foto
+    novoCadastro();
+
+    inputNome.value = nome;
+    if (foto) {
+      preview.innerHTML = `<img src="${foto}" alt="Foto">`;
+      preview.dataset.src = foto;
+    }
+
+    // 🔹 Limpa a querystring para não reabrir novamente
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
+});
+
 
 /* =============================
    INICIAR
