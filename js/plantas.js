@@ -12,7 +12,13 @@ plantas = [
     { nome:'Manjericão', especie:'Ficus lyrata', data: '2023-02-01', descricao:'Prefere luminosidade alta.', tipo:'Indoor', foto:'img/exemplos/manjericao.jpg' },
     { nome:'Lavanda', especie:'Lavandula', data: '2023-03-01', descricao:'Gosta de sol e solo drenado.', tipo:'Outdoor', foto:'img/exemplos/lavanda.jpg' }
 ];
+plantas = plantas.map((p, i) => ({
+  id: p.id || `planta-${i + 1}-${Date.now()}`,
+  ...p
+}));
+
   setPlantas(plantas);
+  localStorage.setItem('todasPlantas', JSON.stringify(plantas));
 } else {
   // Migração: se exemplos conhecidos estão sem foto, define imagens padrão
   let ajustou = false;
@@ -161,6 +167,8 @@ function atualizarVisor() {
   else if (t.includes('indoor')) dica = 'Luz indireta e rega moderada. Evite sol direto.';
   else if (t.includes('out')) dica = 'Prefere sol parcial e solo bem drenado.';
   textoAjudas.textContent = `• ${dica}` + `\n• Verifique drenagem do vaso.` + `\n• Limpe folhas periodicamente.`;
+
+  atualizarEstadoBotao(p.id);
 }
 
 function fecharVisorFn(){ visor.hidden = true; }
@@ -287,3 +295,100 @@ form.addEventListener('submit', (e)=>{
 
 /* iniciar */
 renderizar();
+
+
+
+
+
+
+
+
+
+
+/* ========= FUNÇÕES DE REGA E STREAK ========= */
+
+// Referência ao botão "Cuidar"
+const botaoRegar = document.getElementById("botao-regar");
+
+// 🔹 Função: Marca planta como regada no dia atual
+function marcarPlantaRegada(plantaId) {
+  const hoje = new Date().toISOString().split("T")[0];
+  const regas = JSON.parse(localStorage.getItem("regas")) || {};
+
+  if (!regas[hoje]) regas[hoje] = [];
+
+  if (!regas[hoje].includes(plantaId)) {
+    regas[hoje].push(plantaId);
+  }
+
+  localStorage.setItem("regas", JSON.stringify(regas));
+
+  verificarTodasRegadasHoje();
+}
+
+// 🔹 Função: Atualiza visual do botão conforme estado da planta
+function atualizarEstadoBotao(plantaId) {
+  const hoje = new Date().toISOString().split("T")[0];
+  const regas = JSON.parse(localStorage.getItem("regas")) || {};
+  const regadasHoje = regas[hoje] || [];
+
+  if (regadasHoje.includes(plantaId)) {
+    botaoRegar.classList.add("regada");
+    botaoRegar.textContent = "✅ Regada!";
+  } else {
+    botaoRegar.classList.remove("regada");
+    botaoRegar.textContent = "Cuidar";
+  }
+}
+
+// 🔹 Função: Verifica se todas as plantas foram regadas hoje
+function verificarTodasRegadasHoje() {
+  const hoje = new Date().toISOString().split("T")[0];
+  const todasPlantas = JSON.parse(localStorage.getItem("todasPlantas")) || plantas;
+  const regas = JSON.parse(localStorage.getItem("regas")) || {};
+  const regadasHoje = regas[hoje] || [];
+  let streakData = JSON.parse(localStorage.getItem("streakData")) || {};
+
+  if (regadasHoje.length === 0) {
+    streakData[hoje] = "missed"; // vermelho
+  } else if (regadasHoje.length < todasPlantas.length) {
+    streakData[hoje] = "partial"; // laranja
+  } else {
+    streakData[hoje] = "done"; // verde
+  }
+
+  localStorage.setItem("streakData", JSON.stringify(streakData));
+}
+
+// 🔹 Função: Limpa regas antigas (mantém apenas a de hoje)
+function limparRegasAntigas() {
+  const hoje = new Date().toISOString().split("T")[0];
+  const regas = JSON.parse(localStorage.getItem("regas")) || {};
+  const novas = {};
+  if (regas[hoje]) novas[hoje] = regas[hoje];
+  localStorage.setItem("regas", JSON.stringify(novas));
+}
+
+// 🔹 Ação do botão “Cuidar”
+botaoRegar?.addEventListener("click", () => {
+  const plantaAtual = plantas[indiceAtual];
+  if (!plantaAtual) return;
+
+  // Garante que cada planta tem um ID único
+  if (!plantaAtual.id) {
+    plantaAtual.id = crypto.randomUUID();
+    setPlantas(plantas);
+    localStorage.setItem("todasPlantas", JSON.stringify(plantas));
+  }
+
+  marcarPlantaRegada(plantaAtual.id);
+  atualizarEstadoBotao(plantaAtual.id);
+});
+
+// 🔹 Limpa regas antigas ao iniciar
+limparRegasAntigas();
+
+// 🔹 Atualiza botão sempre que muda de planta no visor
+document.addEventListener("DOMContentLoaded", () => {
+  if (plantas[indiceAtual]) atualizarEstadoBotao(plantas[indiceAtual].id);
+});

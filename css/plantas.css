@@ -533,3 +533,30 @@ textarea {
   src: url('../fonts/DeterminationMonoWebRegular-Z5oq.ttf') format('truetype');
   font-display: swap;
 }
+
+
+
+
+
+
+
+#botao-regar {
+  background-color: #4CAF50; 
+  color: white;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+
+#botao-regar:hover {
+  transform: scale(1.05);
+}
+
+#botao-regar.regada {
+  background-color: #3498db;
+  color: white;
+  border-color: #1c6ea4;
+}
+
+#botao-regar.regada:hover {
+  background-color: #2196F3; 
+}

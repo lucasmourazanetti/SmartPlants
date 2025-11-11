@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1280, height=720, initial-scale=1.0">
+  <title>Calendário de Cuidados </title>
+  <link rel="stylesheet" href="css/calendario.css">
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
+  
+</head>
+<body>
+ <div class="app">
+  <header class="topo">
+      <a class="logo-topo" href="index.html" aria-label="Voltar para Home">
+        <span class="marca-mini">Smart<br>Plants</span>
+      </a>
+      <nav class="abas">
+        <a href="plantas.html" class="aba">Cuidar das Plantas </a>
+        <a href="loja.html" class="aba">Loja</a>
+        <div class="carteira">
+            🍃<span id="carteira-folhas"></span>
+        </div>
+  
+        
+      </nav>
+  </header>
+   
+  <main class="conteudo">
+  <div class="plant-video-container" id="plantVideoContainer">
+   <video id="plantVideo" class="plant-video" preload="auto" muted>
+    <source src="/videos/plant-20761_256.mp4" type="video/mp4">
+    O teu navegador não suporta vídeo.
+   </video>
+   <div class="streak-overlay" id="streakText">0</div>
+  </div>
+
+
+  <div class="calendar-wrapper">
+    <header class="cabecalho-calendario">
+      <h1 id="monthYear"></h1>
+      
+    </header>
+
+    <div class="semana">
+      <div>S</div>
+      <div>T</div>
+      <div>Q</div>
+      <div>Q</div>
+      <div>S</div>
+      <div>S</div>
+      <div>D</div>
+    </div>
+
+    <div class="calendar" id="calendar"></div>
+  </div>
+  
+  <div class="missoes-wrapper">
+   <h2>Missões</h2>
+
+  <!-- Seletor de tipo -->
+  <div class="tipo-missoes">
+    <button class="tipo-btn ativo" data-tipo="streak">🌿 Streak</button>
+    <button class="tipo-btn" data-tipo="compras">🛒 Compras</button>
+    <button class="tipo-btn" data-tipo="cuidados">💧 Cuidados</button>
+  </div>
+  <button id="btn-voltar-missoes" class="btn" style="display:none; margin-bottom: 15px;">⬅️ Voltar</button>
+
+  <!-- Lista de missões -->
+  <div class="missoes-lista">
+    <div class="missao">
+      <div class="icone-progresso" data-progresso="0.7">
+        <svg viewBox="0 0 36 36">
+          <path
+            class="bg"
+            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831
+               a 15.9155 15.9155 0 0 1 0 -31.831"
+          />
+          <path
+            class="progresso"
+            stroke-dasharray="70, 100"
+            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831
+               a 15.9155 15.9155 0 0 1 0 -31.831"
+          />
+        </svg>
+        <div class="icone">🌿</div>
+      </div>
+      <p>Regar plantas 5 dias seguidos</p>
+    </div>
+
+    <div class="missao completa">
+      <div class="icone-progresso" data-progresso="1">
+        <svg viewBox="0 0 36 36">
+          <path class="bg"
+            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831
+               a 15.9155 15.9155 0 0 1 0 -31.831"/>
+          <path class="progresso"
+            stroke-dasharray="100, 100"
+            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831
+               a 15.9155 15.9155 0 0 1 0 -31.831"/>
+        </svg>
+        <div class="icone">🛒</div>
+      </div>
+      <p>Comprar 3 novas plantas</p>
+    </div>
+  </div>
+
+  </div>
+
+  </main>
+
+ </div>
+
+<script src="/js/calendario.js"></script>
+<script src="/js/fontes.js"></script>
+<script src="/js/fundo.js"></script>
+</body>
+</html>
