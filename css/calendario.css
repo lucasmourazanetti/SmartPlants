@@ -1,0 +1,460 @@
+/* ==============================
+   Calendário — estilo tipo loja
+   ============================== */
+
+@import url('https://fonts.googleapis.com/css2?=Segoe+UI:wght@400;600&display=swap');
+
+:root {
+  --cinza-fundo-1: #aeb3b7;
+  --cinza-fundo-2: #99a0a5;
+  --borda: #1f2a22;
+
+  --verde-clarinho: #c3f0c6;
+  --verde: #85e789;
+  --verde-escuro: #2e7d32;
+
+  --amarelo-clarinho: #fff1c8;
+  --azul-clarinho: #b5dbff;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Fundo e alinhamento */
+
+
+
+
+/* Caixa central do calendário */
+.calendar-wrapper {
+  width: 600px;
+  height: 460px;
+  background: linear-gradient(180deg, #f2f9f3 0%, #e1f0e6 100%);
+  border: 3px solid var(--borda);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 30px;
+}
+
+
+.cabecalho-calendario {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+#monthYear {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--verde-escuro);
+  text-transform: capitalize;
+}
+
+.btn {
+  background: #fff;
+  border: 2px solid var(--borda);
+  border-radius: 10px;
+  color: #1a3b1e;
+  text-decoration: none;
+  padding: 8px 14px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+.btn:hover {
+  background: #e8f5e9;
+  box-shadow: 0 0 8px rgba(46,125,50,0.25);
+}
+
+/* Dias da semana */
+.semana {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  margin-bottom: 12px;
+  font-weight: 700;
+  color: #2e7d32;
+}
+
+/* Grid de dias */
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  width: 100%;
+}
+
+/* Cada célula do calendário */
+.day {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  border: 2px solid var(--borda);
+  background: var(--azul-clarinho);
+  color: #1a1a1a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.day:hover {
+  transform: translateY(-2px);
+  background: #fff;
+}
+
+/* Dia atual */
+.day.today {
+  border-color: var(--verde-escuro);
+  background: var(--amarelo-clarinho);
+}
+
+/* Estados */
+.day.done {
+  background: var(--verde);
+  color: #fff;
+}
+.day.partial {
+  background: #f4a261;
+  color: #fff;
+}
+.day.missed {
+  background: #e63946;
+  color: #fff;
+}
+
+.plant-video-container {
+  position: absolute;
+  right: 37%;
+  top: 40%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 1;
+  transition: opacity 1s ease;
+}
+.show-video {
+  opacity: 1 !important;
+}
+.plant-video {
+  width: 150px;
+  height: 150px;
+  border-radius: 16px;
+  object-fit: cover;
+  border: 4px solid var(--borda);
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+.streak-overlay {
+  position: absolute;
+  bottom: 70px;
+  right: 60px;
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--verde-escuro);
+  text-shadow: 2px 2px #fff;
+}
+
+
+
+
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  width: 100%;
+  justify-items: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.app {
+  height: 100%;
+  width: 100%;
+  border: 3px solid var(--borda);
+  border-radius: 16px;
+  /* fundo com cara de plantas: verdes bem suaves e orgânicos */
+  background:
+    radial-gradient(1100px 480px at -10% -12%, rgba(46,125,50,.06), rgba(46,125,50,0) 60%),
+    radial-gradient(1100px 480px at 110% -12%, rgba(133,231,137,.06), rgba(133,231,137,0) 62%),
+    linear-gradient(180deg, #eaf6ee 0%, #e1f0e6 55%, #d6eadc 100%);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.logo-topo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+.logo-topo:focus-visible {
+  outline: 3px solid var(--borda);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+.marca-mini {
+  font-family: "Pacifico", cursive;
+  color: var(--verde-escuro); /* mesmo tom do index */
+  font-size: 40px; /* um pouco maior para ficar mais chamativa */
+  line-height: .9;
+  letter-spacing: .7px;
+  text-shadow: 0 1px 0 #ffffff;
+  transition: transform .15s ease, text-shadow .2s ease, color .2s ease;
+}
+.logo-topo:hover .marca-mini,
+.logo-topo:focus-visible .marca-mini {
+  transform: translateY(-1px);
+  /* brilho sutil em verde para chamar atenção, mantendo a aparência */
+  text-shadow: 0 1px 0 #ffffff, 0 0 8px rgba(46,125,50,.28);
+}
+.topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 3px solid var(--borda);
+  /* aproxima a barra do topo do visual da Home */
+  background: linear-gradient(180deg, #abdbaf 0%, #cfe2d1 100%);
+}
+.abas {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.aba {
+  border-radius: 10px;
+  border: 2px solid var(--borda);
+  background: #fff;
+  font-weight: 700;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: large;
+}
+body {
+  font-family: system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  /* mesmo fundo suave da Home */
+  
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.missoes-wrapper {
+  position: absolute;
+  right: 5%;
+  top: 60%;
+  transform: translateY(-50%);
+  background: linear-gradient(180deg, #f2f9f3 0%, #e1f0e6 100%);
+  border: 4px solid var(--borda);
+  border-radius: 20px;
+  width: 270px;
+  height: 400px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.missoes-wrapper h2 {
+  color: var(--verde-escuro);
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+}
+
+.tipo-missoes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;                /* Espaço igual entre botões */
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+
+.tipo-btn {
+  flex: 1;                  /* Todos os botões têm o mesmo tamanho */
+  text-align: center;
+  border: 2px solid var(--borda);
+  background: #fff;
+  border-radius: 10px;
+  padding: 10px 0;
+  
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 0;             /* evita que o flex “exploda” */
+}
+
+.tipo-btn:hover {
+  background: var(--verde-clarinho);
+  transform: translateY(-2px);
+}
+
+
+/* Lista de missões */
+.missoes-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.missao {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffffb5;
+  border: 2px solid var(--borda);
+  border-radius: 14px;
+  padding: 10px;
+  transition: all 0.3s;
+}
+.missao.completa {
+  background: var(--verde);
+  color: #fff;
+}
+
+/* Ícone com progresso circular */
+.icone-progresso {
+  position: relative;
+  width: 50px;
+  height: 50px;
+}
+
+.icone-progresso svg {
+  width: 50px;
+  height: 50px;
+  transform: rotate(-90deg);
+}
+
+.icone-progresso .bg {
+  fill: none;
+  stroke: #ddd;
+  stroke-width: 3.8;
+}
+
+.icone-progresso .progresso {
+  fill: none;
+  stroke: var(--verde-escuro);
+  stroke-width: 3.8;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.5s ease;
+}
+
+.icone-progresso .icone {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.4rem;
+}
+
+/* Missão completa — ícone muda de cor */
+.missao.completa .icone-progresso .progresso {
+  stroke: gold;
+}
+.missao.completa .icone-progresso .icone {
+  color: gold;
+}
+
+.conteudo { 
+  flex: 1;
+   padding: 10px;
+    overflow: auto;
+}
+#btn-voltar-missoes {
+  width: 100%;
+  background: #fff;
+  border: 2px solid var(--borda);
+  border-radius: 10px;
+  padding: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#btn-voltar-missoes:hover {
+  background: var(--verde-clarinho);
+}
+
+.btn-coletar {
+  border: 2px solid var(--borda);
+  background: var(--verde);
+  color: #fff;
+  border-radius: 10px;
+  padding: 6px 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-coletar:hover {
+  background: var(--verde-escuro);
+  transform: translateY(-2px);
+}
+
+.btn-coletar:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
