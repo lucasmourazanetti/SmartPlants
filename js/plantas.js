@@ -49,6 +49,7 @@ const textoDescricao = document.getElementById('texto-descricao');
 const textoAjudas = document.getElementById('texto-ajudas');
 const btnEditar = document.getElementById('botao-editar');
 const btnExcluir = document.getElementById('botao-excluir');
+const btnLembrete = document.getElementById('botao-lembretes');
 
 /* MODAL refs (criar/editar) */
 const modal = document.getElementById('modal-planta');
@@ -88,6 +89,19 @@ function closeDialog(d){
     if (d) d.removeAttribute('open');
   }
 }
+
+/* Lembrete automático da planta selecionada */
+
+if (btnLembrete) {
+  btnLembrete.addEventListener('click', () => {
+    const nome = nomeGrande.textContent || '';
+    const foto = fotoGrande.src || '';
+    const params = new URLSearchParams({ nome, foto, novo: '1' });
+    window.location.href = `lembretes.html?${params.toString()}`;
+  });
+}
+
+
 
 /* render cards */
 function criarCard(planta, idx) {
