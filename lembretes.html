@@ -4,21 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SmartPlants — Lembretes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/plantas.css" />
   <link rel="stylesheet" href="css/lembretes.css" />
 </head>
 <body>
   <div class="app">
     <header class="topo">
+      <a class="logo-topo" href="index.html" aria-label="Voltar para Home">
+        <span class="marca-mini">Smart<br>Plants</span>
+      </a>
       <nav class="abas">
-        <button class="aba" id="botao_plantas_principal"><a href="plantas.html">Plantas</a></button>
+        <a class="aba" href="plantas.html" title="Ir para Plantas" style="text-decoration:none;color:inherit">Plantas</a>
         <button class="aba ativa">Lembretes</button>
         <div class="busca">
           <input id="campo-busca" type="text" placeholder="Pesquisar..." />
           <button id="botao-filtro" title="Filtro">🔎</button>
         </div>
       </nav>
-      <a class="voltar" href="index.html" title="Voltar para Home">↩</a>
     </header>
 
     <main class="conteudo">
