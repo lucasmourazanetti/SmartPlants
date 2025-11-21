@@ -67,32 +67,42 @@
     return folhas;
   }
 
-  // --- Store logic ---
-  function comprarOuAplicar(imgSrc, preco, card) {
-    let folhas = parseInt(localStorage.getItem("folhas") || "0");
-    let comprados = JSON.parse(localStorage.getItem("fundosComprados") || "[]");
+  async function comprarOuAplicar(imgSrc, preco, card) {
 
-    if (comprados.includes(imgSrc)) {
-      localStorage.setItem("fundoSelecionado", imgSrc);
-      applyBackgroundUrl(imgSrc);
-      alert("Fundo aplicado!");
-      return;
-    }
+  // --- Confirmation step BEFORE anything happens ---
+  const querComprar = await confirm("Tens a certeza que queres comprar este fundo?");
+  if (!querComprar) return; // user clicked "Não"
 
-    if (folhas >= preco) {
-      folhas -= preco;
-      localStorage.setItem("folhas", folhas);
-      comprados.push(imgSrc);
-      localStorage.setItem("fundosComprados", JSON.stringify(comprados));
-      localStorage.setItem("fundoSelecionado", imgSrc);
-      applyBackgroundUrl(imgSrc);
-      atualizarCarteira();
-      alert("Fundo comprado e aplicado!");
-      card.classList.remove("locked");
-    } else {
-      alert("Não tens folhas suficientes! 🍃");
-    }
+  let folhas = parseInt(localStorage.getItem("folhas") || "0");
+  let comprados = JSON.parse(localStorage.getItem("fundosComprados") || "[]");
+
+  // --- If already purchased, only apply ---
+  if (comprados.includes(imgSrc)) {
+    localStorage.setItem("fundoSelecionado", imgSrc);
+    applyBackgroundUrl(imgSrc);
+
+    await alert("Fundo aplicado!");
+    return;
   }
+
+  // --- If not purchased, attempt to buy ---
+  if (folhas >= preco) {
+    folhas -= preco;
+    localStorage.setItem("folhas", folhas);
+    comprados.push(imgSrc);
+    localStorage.setItem("fundosComprados", JSON.stringify(comprados));
+    localStorage.setItem("fundoSelecionado", imgSrc);
+
+    applyBackgroundUrl(imgSrc);
+    atualizarCarteira();
+    card.classList.remove("locked");
+
+    await alert("Fundo comprado e aplicado!");
+  } else {
+    await alert("Não tens folhas suficientes! 🍃");
+  }
+}
+
 
   // --- Init ---
   async function init() {
@@ -147,4 +157,60 @@
   } else {
     init();
   }
+})();
+
+(function () {
+  const modal = document.getElementById("alert-modal");
+  const text = document.getElementById("alert-text");
+  const btn = document.getElementById("alert-ok");
+
+  const confirmModal = document.getElementById("confirm-modal");
+  const confirmText = document.getElementById("confirm-text");
+  const btnYes = document.getElementById("confirm-yes");
+  const btnNo = document.getElementById("confirm-no");
+
+  // Custom alert (OK only)
+  window.alert = function (msg) {
+    text.textContent = msg;
+    modal.classList.remove("hidden");
+
+    return new Promise(resolve => {
+      const close = () => {
+        modal.classList.add("hidden");
+        btn.removeEventListener("click", close);
+        resolve();
+      };
+
+      btn.addEventListener("click", close);
+    });
+  };
+
+  // Custom confirmation (Yes / No)
+  window.confirm = function (msg) {
+    confirmText.textContent = msg;
+    confirmModal.classList.remove("hidden");
+
+    return new Promise(resolve => {
+      const yes = () => {
+        confirmModal.classList.add("hidden");
+        cleanup();
+        resolve(true);
+      };
+
+      const no = () => {
+        confirmModal.classList.add("hidden");
+        cleanup();
+        resolve(false);
+      };
+
+      const cleanup = () => {
+        btnYes.removeEventListener("click", yes);
+        btnNo.removeEventListener("click", no);
+      };
+
+      btnYes.addEventListener("click", yes);
+      btnNo.addEventListener("click", no);
+    });
+  };
+
 })();
