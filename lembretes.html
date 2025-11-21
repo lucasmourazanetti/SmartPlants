@@ -85,6 +85,23 @@
             <option>Uma vez</option>
           </select>
         </label>
+        <label id="campo-dia-container" hidden>
+        Dia do lembrete
+        <select id="dia-semana" hidden>
+          <option value="">Selecione…</option>
+          <option value="0">Domingo</option>
+          <option value="1">Segunda-feira</option>
+          <option value="2">Terça-feira</option>
+          <option value="3">Quarta-feira</option>
+          <option value="4">Quinta-feira</option>
+          <option value="5">Sexta-feira</option>
+          <option value="6">Sábado</option>
+        </select>
+
+        <input type="number" id="dia-mes" min="1" max="31" hidden />
+
+        <input type="date" id="dia-unico" hidden />
+      </label>
       </div>
 
       <div class="col-centro">
