@@ -371,7 +371,9 @@ async function calcularMissoesStreak() {
 }
 
 
-// Mensagem inicial
-lista.innerHTML = '<p style="text-align:center; color:#2e7d32;">Escolhe um tipo de missão acima 🌱</p>';
+const helpBtn = document.getElementById("helpBtn");
+const helpBox = document.getElementById("helpBox");
 
-
+helpBtn.addEventListener("click", () => {
+  helpBox.style.display = helpBox.style.display === "block" ? "none" : "block";
+});
