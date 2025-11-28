@@ -1,4 +1,6 @@
-
+// -----------------------------
+// calendario.js (versão corrigida)
+// -----------------------------
 const calendar = document.getElementById('calendar');
 const monthYear = document.getElementById('monthYear');
 const today = new Date();
@@ -13,18 +15,13 @@ const monthNames = [
 
 monthYear.textContent = `${monthNames[month]} ${year}`;
 
-const streakData = JSON.parse(localStorage.getItem('streakData')) || {};
-let streakCount = parseInt(localStorage.getItem('streakCount')) || 0;
-
-
-if (!localStorage.getItem("primeiraVez")) {
+const streakDataStored = JSON.parse(localStorage.getItem('streakData')) || {};
+// Inicialização "primeira vez" — cria dados iniciais apenas se ainda não existir
+if (!localStorage.getItem("primeiraVez") && Object.keys(streakDataStored).length === 0) {
   console.log("🌿 Primeira vez no site — criando dados iniciais...");
 
   const hoje = new Date();
-  const ontem = new Date(hoje);
-  ontem.setDate(hoje.getDate() - 1);
-
-  // gera datas dos 4 dias anteriores a ontem
+  // Garante que criamos os 4 dias anteriores a HOJE como done (inclui ontem)
   const streakDataInicial = {};
   for (let i = 4; i >= 1; i--) {
     const data = new Date(hoje);
@@ -33,21 +30,23 @@ if (!localStorage.getItem("primeiraVez")) {
     streakDataInicial[dataStr] = "done";
   }
 
-  // ontem (ainda done), hoje missed
-  streakDataInicial[ontem.toISOString().split("T")[0]] = "done";
-  streakDataInicial[hoje.toISOString().split("T")[0]] = "missed";
+  // Hoje iniciamos como missed (o utilizador ainda não fez a ação hoje)
+  const hojeStr = hoje.toISOString().split("T")[0];
+  streakDataInicial[hojeStr] = "missed";
 
   // grava tudo no localStorage
   localStorage.setItem("streakData", JSON.stringify(streakDataInicial));
   localStorage.setItem("streakCount", "4");
+  // ultimoDiaContado fica como ontem (já contado)
+  const ontem = new Date(hoje);
+  ontem.setDate(hoje.getDate() - 1);
   localStorage.setItem("ultimoDiaContado", ontem.toISOString().split("T")[0]);
-  
-  
   localStorage.setItem("primeiraVez", "true"); // marca que já inicializou
 
   console.log("✅ Dados iniciais criados:", streakDataInicial);
 }
 
+// Função que gera o calendário visual
 function generateCalendar() {
   const calendar = document.getElementById("calendar");
   const monthYear = document.getElementById("monthYear");
@@ -75,17 +74,11 @@ function generateCalendar() {
     calendar.appendChild(vazio);
   }
 
-  // Normaliza as chaves do localStorage
-  const chavesStreak = Object.keys(streakData).map(key =>
-    key.length === 10 ? key : key.replace(/-(\d)-/, "-0$1-").replace(/-(\d)$/, "-0$1")
-  );
-
   // Criar os dias do mês
   for (let dia = 1; dia <= ultimoDia.getDate(); dia++) {
     const dataAtual = new Date(ano, mes, dia);
     const dataStr = `${ano}-${String(mes + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
-    const index = chavesStreak.indexOf(dataStr);
-    const estado = index >= 0 ? streakData[Object.keys(streakData)[index]] : null;
+    const estado = streakData[dataStr] || null;
 
     const div = document.createElement("div");
     div.classList.add("day");
@@ -98,12 +91,12 @@ function generateCalendar() {
       div.classList.add("today");
     }
 
-    // Passados → cor conforme localStorage
+    // Passados → cor conforme localStorage (ou missed por padrão)
     if (dataAtual < hoje) {
       if (estado) div.classList.add(estado);
       else div.classList.add("missed");
     } 
-    // Hoje e futuro → azul
+    // Hoje e futuro → azul (visual)
     else {
       div.style.background = "#3b5bdb";
     }
@@ -112,7 +105,7 @@ function generateCalendar() {
   }
 }
 
-
+// Calcula o streak com protecções
 function calcularStreak() {
   const streakData = JSON.parse(localStorage.getItem("streakData")) || {};
   const hoje = new Date();
@@ -128,32 +121,29 @@ function calcularStreak() {
   const statusHoje = streakData[hojeStr];
   const statusOntem = streakData[ontemStr];
 
-  // ✅ Só atualiza se HOJE for "done" e ainda não tiver sido contado
+  // Se HOJE for "done" e ainda não tiver sido contado -> incrementa lógica
   if (statusHoje === "done" && ultimoDiaContado !== hojeStr) {
     if (statusOntem === "done") {
-      streakCount += 1; // continua a sequência
+      streakCount = (isNaN(streakCount) ? 0 : streakCount) + 1; // continua a sequência
     } else {
       streakCount = 1; // começa uma nova sequência
     }
-
     // guarda a data que já foi contada
     localStorage.setItem("ultimoDiaContado", hojeStr);
   }
 
-  // ❌ Se hoje não for "done" e ontem também não foi "done", zera o streak
+  // Se nem hoje nem ontem foram done -> zera o streak
   if (statusHoje !== "done" && statusOntem !== "done") {
     streakCount = 0;
   }
 
-  // grava no localStorage
-  localStorage.setItem("streakCount", streakCount);
+  // grava no localStorage (normaliza NaN)
+  if (isNaN(streakCount)) streakCount = 0;
+  localStorage.setItem("streakCount", String(streakCount));
 
   console.log(`🌿 streakCount: ${streakCount} (último contado: ${ultimoDiaContado || "nenhum"})`);
   return streakCount;
 }
-
-
-
 
 function showPlantVideo(streakCount) {
   const container = document.getElementById("plantVideoContainer");
@@ -172,21 +162,18 @@ function showPlantVideo(streakCount) {
     video.currentTime = video.duration;
   });
 }
-generateCalendar();
 
-
-
-
-const streak = calcularStreak();
-if (streak > 0) showPlantVideo(streak);
-// Exemplo:
-
+/* ------------ atualização de cuidados (REGAS) ------------- */
+/* Esta função só ACTUALIZA o estado de HOJE e faz-o de forma não destrutiva:
+   - se houver um valor existente para hoje, só o substitui se for realmente diferente
+   - não mexe em dias passados, para não sobrescrever a inicialização */
 function atualizarCalendarioDeCuidados() {
   const regas = JSON.parse(localStorage.getItem("regas")) || {};
-  const hoje = new Date().toISOString().split("T")[0];
-  const todasPlantas = JSON.parse(localStorage.getItem("plantas")) || []; // se guardas as plantas
+  const hoje = new Date();
+  const hojeKey = hoje.toISOString().split("T")[0];
+  const todasPlantas = JSON.parse(localStorage.getItem("todasPlantas")) || [];
 
-  const regadasHoje = regas[hoje] || [];
+  const regadasHoje = regas[hojeKey] || [];
 
   let status;
   if (regadasHoje.length === 0) {
@@ -197,19 +184,16 @@ function atualizarCalendarioDeCuidados() {
     status = "done"; // verde
   }
 
-  // Atualiza o calendário no localStorage
-  const date = new Date();
-  const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
   const streakData = JSON.parse(localStorage.getItem("streakData")) || {};
-  streakData[key] = status;
-
-  localStorage.setItem("streakData", JSON.stringify(streakData));
+  // Só escreve se for diferente (ou inexistente) para evitar sobrescritas indesejadas
+  if (!streakData[hojeKey] || streakData[hojeKey] !== status) {
+    streakData[hojeKey] = status;
+    localStorage.setItem("streakData", JSON.stringify(streakData));
+    console.log("🔁 Atualizado streakData[hoje] para:", status);
+  }
 }
 
-
-
-
-
+/* ------------ Código das missões e UI (sem alterações funcionais significativas) ------------- */
 const botoesTipo = document.querySelectorAll('.tipo-btn');
 const btnVoltar = document.getElementById('btn-voltar-missoes');
 const lista = document.querySelector('.missoes-lista');
@@ -252,8 +236,8 @@ async function atualizarMissoes(tipo) {
 
   if (tipo === "streak") return; // já foi renderizado dentro de calcularMissoesStreak()
 
-missoes[tipo].forEach(m => {
-  const missaoEl = document.createElement('div');
+  missoes[tipo].forEach(m => {
+    const missaoEl = document.createElement('div');
     missaoEl.className = 'missao' + (m.completa ? ' completa' : '');
     missaoEl.innerHTML = `
       <div class="icone-progresso" data-progresso="${m.progresso}">
@@ -277,9 +261,6 @@ missoes[tipo].forEach(m => {
   });
 }
 
-// ----------------------------------------------------
-// Cálculo dinâmico das missões de streak
-// ----------------------------------------------------
 async function calcularMissoesStreak() {
   const missoes = [];
   const folhas = parseInt(localStorage.getItem("folhas") || "0");
@@ -345,35 +326,55 @@ async function calcularMissoesStreak() {
   });
 
   lista.querySelectorAll('.btn-coletar').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const id = btn.dataset.id;
-    if (recompensasRecebidas.includes(id)) return;
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.id;
+      if (recompensasRecebidas.includes(id)) return;
 
-    let folhasAtual = parseInt(localStorage.getItem("folhas") || "0") + 20;
-    recompensasRecebidas.push(id);
+      let folhasAtual = parseInt(localStorage.getItem("folhas") || "0") + 20;
+      recompensasRecebidas.push(id);
 
-    localStorage.setItem("folhas", folhasAtual);
-    localStorage.setItem("missoesCompletas", JSON.stringify(recompensasRecebidas));
+      localStorage.setItem("folhas", folhasAtual);
+      localStorage.setItem("missoesCompletas", JSON.stringify(recompensasRecebidas));
 
-    const carteira = document.getElementById("carteira-folhas");
-    if (carteira) carteira.textContent = folhasAtual;
+      const carteira = document.getElementById("carteira-folhas");
+      if (carteira) carteira.textContent = folhasAtual;
 
-    // ✅ substitui o botão corretamente
-    const label = document.createElement("small");
-    label.textContent = "✅ Coletada";
-    label.style.color = "gold";
-    label.style.fontWeight = "700";
-    btn.replaceWith(label);
+      const label = document.createElement("small");
+      label.textContent = "✅ Coletada";
+      label.style.color = "gold";
+      label.style.fontWeight = "700";
+      btn.replaceWith(label);
+    });
   });
-});
 
   return missoes;
 }
 
-
+/* help box */
 const helpBtn = document.getElementById("helpBtn");
 const helpBox = document.getElementById("helpBox");
 
 helpBtn.addEventListener("click", () => {
   helpBox.style.display = helpBox.style.display === "block" ? "none" : "block";
 });
+
+/* ------------- Inicialização da UI após definições ------------- */
+// Gera o calendário (não chama atualizarCalendarioDeCuidados aqui)
+generateCalendar();
+// Atualiza apenas o estado de HOJE com base nas regas (não sobrescreve outras datas)
+atualizarCalendarioDeCuidados();
+// Recalcula o streak a partir dos dados atuais (localStorage)
+const streak = calcularStreak();
+if (streak > 0) showPlantVideo(streak);
+
+// Desativa clique em botões de compras/cuidados (mantém hover)
+const btnCompras = document.querySelector('[data-tipo="compras"]');
+const btnCuidados = document.querySelector('[data-tipo="cuidados"]');
+if (btnCompras) {
+  btnCompras.style.pointerEvents = "none";
+  btnCompras.classList.add('desativado');
+}
+if (btnCuidados) {
+  btnCuidados.style.pointerEvents = "none";
+  btnCuidados.classList.add('desativado');
+}

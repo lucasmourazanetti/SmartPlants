@@ -45,7 +45,21 @@
 
  <div id="helpBox" class="help-box">
   <p>
-    
+    <strong> Como funciona o Calendário?</strong><br>
+        Cada dia mostra se cuidaste das tuas plantas:<br>
+        🟩 <b>Done</b> – regaste todas as plantas<br>
+        🟧 <b>Partial</b> – regaste algumas<br>
+        🔴 <b>Missed</b> – não regaste<br>
+        <br><br>
+        <strong> Streak</strong><br>
+        O streak conta quantos dias seguidos cuidaste das plantas.<br>
+        Se falhares um dia completo, volta a 0.<br>
+        <br><br>
+        <strong> Como marcar cuidados?</strong><br>
+        Vai à página <b>Cuidar das Plantas</b> e carrega no botão <b>Cuidar</b> em cada planta.<br>
+        Quando todas forem cuidadas hoje → o dia fica verde no calendário.
+        <br><br>
+
   </p>
  </div>
 
@@ -79,41 +93,8 @@
 
   <!-- Lista de missões -->
   <div class="missoes-lista">
-    <div class="missao">
-      <div class="icone-progresso" data-progresso="0.7">
-        <svg viewBox="0 0 36 36">
-          <path
-            class="bg"
-            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831
-               a 15.9155 15.9155 0 0 1 0 -31.831"
-          />
-          <path
-            class="progresso"
-            stroke-dasharray="70, 100"
-            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831
-               a 15.9155 15.9155 0 0 1 0 -31.831"
-          />
-        </svg>
-        <div class="icone">🌿</div>
-      </div>
-      <p>Regar plantas 5 dias seguidos</p>
-    </div>
+    <p style="text-align:center; color:#2e7d32;">Escolhe um tipo de missão acima 🌱</p>
 
-    <div class="missao completa">
-      <div class="icone-progresso" data-progresso="1">
-        <svg viewBox="0 0 36 36">
-          <path class="bg"
-            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831
-               a 15.9155 15.9155 0 0 1 0 -31.831"/>
-          <path class="progresso"
-            stroke-dasharray="100, 100"
-            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831
-               a 15.9155 15.9155 0 0 1 0 -31.831"/>
-        </svg>
-        <div class="icone">🛒</div>
-      </div>
-      <p>Comprar 3 novas plantas</p>
-    </div>
   </div>
 
   </div>
@@ -125,5 +106,6 @@
 <script src="/js/calendario.js"></script>
 <script src="/js/fontes.js"></script>
 <script src="/js/fundo.js"></script>
+<script src="/js/plantas.js"></script>
 </body>
 </html>

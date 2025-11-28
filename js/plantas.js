@@ -4,6 +4,36 @@ const getPlantas = () => JSON.parse(localStorage.getItem(CHAVE) || '[]');
 const setPlantas = (p) => localStorage.setItem(CHAVE, JSON.stringify(p));
 
 let plantas = getPlantas();
+/* === INICIALIZAR STREAK SE FOR A PRIMEIRA VEZ === */
+if (!localStorage.getItem("primeiraVez")) {
+    const hoje = new Date();
+    const streakDataInicial = {};
+
+    // cria 4 dias anteriores como done
+    for (let i = 4; i >= 1; i--) {
+        const d = new Date(hoje);
+        d.setDate(hoje.getDate() - i);
+        const key = d.toISOString().split("T")[0];
+        streakDataInicial[key] = "done";
+    }
+
+    // ontem também done
+    const ontem = new Date(hoje);
+    ontem.setDate(hoje.getDate() - 1);
+    streakDataInicial[ontem.toISOString().split("T")[0]] = "done";
+
+    // hoje começa como missed (ainda não regou nada)
+    const hojeKey = hoje.toISOString().split("T")[0];
+    streakDataInicial[hojeKey] = "missed";
+
+    localStorage.setItem("streakData", JSON.stringify(streakDataInicial));
+    localStorage.setItem("streakCount", "4");
+    localStorage.setItem("ultimoDiaContado", ontem.toISOString().split("T")[0]);
+    localStorage.setItem("primeiraVez", "true");
+
+    console.log("🌱 Inicialização completa do streak feita na página de plantas.");
+}
+
 
 /* dados de exemplo caso vazio */
 if (plantas.length === 0) {
