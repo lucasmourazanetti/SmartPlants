@@ -83,6 +83,10 @@ function generateCalendar() {
     const div = document.createElement("div");
     div.classList.add("day");
     div.textContent = dia;
+    // --- CLIQUE EM UM DIA ---
+    div.addEventListener("click", () => {
+       abrirDiaCalendario(dataStr);
+    });
 
     const hojeStr = hoje.toISOString().split("T")[0];
 
@@ -104,6 +108,90 @@ function generateCalendar() {
     calendar.appendChild(div);
   }
 }
+
+function abrirDiaCalendario(dataStr) {
+    const painel = document.getElementById("painelDia");
+    const titulo = document.getElementById("painelData");
+    const lista = document.getElementById("listaPlantasDia");
+    const estadoDia = document.getElementById("estadoDia");
+    const btnLembrete = document.getElementById("btnCriarLembrete");
+
+    const plantas = JSON.parse(localStorage.getItem("plantas")) || [];
+    const regas = JSON.parse(localStorage.getItem("regas")) || {};
+    const streakData = JSON.parse(localStorage.getItem("streakData")) || {};
+
+    const hojeStr = new Date().toISOString().split("T")[0];
+    const hoje = new Date(hojeStr);
+    const dataSelecionada = new Date(dataStr);
+
+    // Mostrar data
+    titulo.textContent = `📅 ${dataStr}`;
+
+    // Estado do dia
+    const estado = streakData[dataStr] || "future";
+
+    const cores = {
+        done:  ["🟢 Dia concluído", "#2e7d32"],
+        partial: ["🟠 Parcial", "#f4a261"],
+        missed: ["🔴 Perdido", "#e63946"],
+        future: ["🔵 Dia futuro", "#3b5bdb"],
+        today: ["🟡 Hoje", "#f1c40f"]
+    };
+
+    let estadoFinal = estado;
+    if (dataStr === hojeStr) estadoFinal = "today";
+    if (dataSelecionada > hoje) estadoFinal = "future";
+
+    estadoDia.textContent = cores[estadoFinal][0];
+    estadoDia.style.background = cores[estadoFinal][1];
+    estadoDia.style.color = "#fff";
+
+    // Listar plantas tratadas
+    lista.innerHTML = "";
+    const regadas = regas[dataStr] || [];
+
+    if (regadas.length === 0) {
+        lista.innerHTML = "<li><span>😕</span> Nenhuma planta</li>";
+    } else {
+        plantas.forEach(planta => {
+            if (regadas.includes(planta.id)) {
+                const li = document.createElement("li");
+                li.innerHTML = `<span>🌱</span> ${planta.nome}`;
+                lista.appendChild(li);
+            }
+        });
+    }
+
+    // Mostrar botão de lembrete apenas para HOJE e FUTURO
+    if (dataSelecionada >= hoje) {
+        btnLembrete.classList.remove("hidden");
+        btnLembrete.onclick = () => criarLembreteParaData(dataStr);
+    } else {
+        btnLembrete.classList.add("hidden");
+    }
+
+    // Mostrar o painel
+    painel.classList.add("show");
+}
+
+document.getElementById("fecharPainel").addEventListener("click", () => {
+    document.getElementById("painelDia").classList.remove("show");
+});
+
+
+
+function criarLembreteParaData(dataStr) {
+    // guarda temporariamente a data no localStorage também:
+    localStorage.setItem("lembreteDataPreSelecionada", dataStr);
+
+    // abre a página com a data na querystring
+    window.location.href = `lembretes.html?data=${dataStr}`;
+}
+
+
+
+
+
 
 // Calcula o streak com protecções
 function calcularStreak() {

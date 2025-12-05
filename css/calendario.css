@@ -538,3 +538,81 @@ body {
   from { opacity: 0; transform: translateY(-6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+
+
+/* Painel lateral */
+.painel-dia {
+  position: fixed;
+  top: 0;
+  right: -380px;
+  width: 350px;
+  height: 100%;
+  background: #ffffff;
+  box-shadow: -4px 0 14px rgba(0,0,0,0.2);
+  padding: 20px;
+  border-left: 4px solid #2e7d32;
+  transition: right 0.35s ease;
+  z-index: 999;
+  font-family: Segoe UI, sans-serif;
+}
+
+.painel-dia.show {
+  right: 0;
+}
+
+.fechar-painel {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  float: right;
+}
+
+#painelData {
+  margin-top: 20px;
+  font-size: 1.3rem;
+  color: #2e7d32;
+  font-weight: bold;
+}
+
+.estado-dia {
+  margin: 12px 0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.lista-plantas-dia {
+  margin-top: 10px;
+  list-style: none;
+  padding-left: 0;
+}
+.lista-plantas-dia li {
+  padding: 6px 0;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-criar-lembrete {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.btn-criar-lembrete:hover {
+  background: #379e3b;
+}
+
+.hidden {
+  display: none;
+}

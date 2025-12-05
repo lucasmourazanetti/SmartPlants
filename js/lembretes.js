@@ -7,6 +7,30 @@ const setLembretes = (arr) => localStorage.setItem(CHAVE_LEMBRETES, JSON.stringi
 
 let lembretes = getLembretes();
 
+// --- RECEBE DATA DO CALENDÁRIO ---
+const params = new URLSearchParams(window.location.search);
+const dataPre = params.get("data") || localStorage.getItem("lembreteDataPreSelecionada");
+
+if (dataPre) {
+    // abre automaticamente o modal para criar lembrete
+    setTimeout(() => {
+        abrirCriarLembreteComData(dataPre);
+        localStorage.removeItem("lembreteDataPreSelecionada");
+    }, 300);
+}
+function abrirCriarLembreteComData(dataStr) {
+    document.getElementById("titulo-modal").textContent = "Novo Lembrete";
+    form.reset();
+
+    // Preenche a data automaticamente no campo adequado (modal tem vários tipos — usamos o "Uma vez")
+    document.getElementById("frequencia-lembrete").value = "Uma vez";
+    document.getElementById("dia-unico").hidden = false;
+    document.getElementById("dia-unico").value = dataStr;
+
+    openDialog(document.getElementById("modal-criar-lembrete"));
+}
+
+
 /* Dados iniciais se estiver vazio */
 if (lembretes.length === 0) {
   lembretes = [
