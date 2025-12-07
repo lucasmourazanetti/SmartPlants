@@ -229,6 +229,13 @@ body {
   cursor: pointer;
 
 }
+.logo-voltar {
+  display: inline-block;
+  font-size: 32px;
+  line-height: 1;
+  color: var(--verde-escuro);
+  text-shadow: 0 1px 0 #ffffff;
+}
 
 .logo-topo:focus-visible {
 

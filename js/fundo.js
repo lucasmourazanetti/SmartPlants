@@ -3,7 +3,7 @@
     const LOG = true;
     const log = (...a) => LOG && console.log("[fundo.js]", ...a);
 
-    // ðŸŒ¿ CONFIG
+    // 🍃 CONFIG
     const PRECOS = [20, 20, 20, 20, 40, 40, 40, 40];
     const STARTING_LEAVES = 100;
 
@@ -106,7 +106,7 @@
 
           await alert("Fundo comprado e aplicado!");
         } else {
-          await alert("NÃ£o tens folhas suficientes! ðŸƒ");
+          await alert("Não tens folhas suficientes! 🍃");
         }
       } catch (err) {
         console.error("[fundo.js] comprarOuAplicar error:", err);
@@ -153,7 +153,7 @@
           // overlay
           let overlay = document.createElement("div");
           overlay.className = "preco-overlay";
-          overlay.textContent = `${preco} ðŸƒ`;
+          overlay.textContent = `${preco} 🍃`;
           card.appendChild(overlay);
 
           // mark locked
@@ -161,6 +161,25 @@
 
           card.addEventListener("click", () => comprarOuAplicar(src, preco, card));
         });
+
+        // Reset button functionality
+        const btnReset = document.getElementById("reset-fundo");
+        if (btnReset) {
+          btnReset.addEventListener("click", async () => {
+            const confirmReset = await confirm("Restaurar o fundo padrão?");
+            if (confirmReset) {
+              localStorage.removeItem("fundoSelecionado");
+              const target = document.querySelector(".app") || document.body;
+              if (target) {
+                target.style.removeProperty("background");
+                target.style.removeProperty("background-size");
+                target.style.removeProperty("background-repeat");
+                target.style.removeProperty("background-position");
+              }
+              await alert("Fundo padrão restaurado!");
+            }
+          });
+        }
       } catch (err) {
         console.error("[fundo.js] init() error:", err);
         // do not rethrow
@@ -196,7 +215,7 @@
         const btnYes = document.getElementById("confirm-yes");
         const btnNo = document.getElementById("confirm-no");
 
-        // If modals do not exist on this page â†' DO NOT override alert/confirm.
+        // If modals do not exist on this page – DO NOT override alert/confirm.
         if (!modal || !text || !btn || !confirmModal || !confirmText || !btnYes || !btnNo) {
           console.warn("[fundo.js] Modal UI not found - skipping alert/confirm override.");
           return;
