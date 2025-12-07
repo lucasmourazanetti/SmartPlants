@@ -17,34 +17,46 @@ monthYear.textContent = `${monthNames[month]} ${year}`;
 
 const streakDataStored = JSON.parse(localStorage.getItem('streakData')) || {};
 // Inicialização "primeira vez" — cria dados iniciais apenas se ainda não existir
+// Inicialização "primeira vez" — cria dados iniciais apenas se ainda não existir
 if (!localStorage.getItem("primeiraVez") && Object.keys(streakDataStored).length === 0) {
-  console.log("🌿 Primeira vez no site — criando dados iniciais...");
+console.log("🌿 Primeira vez no site — criando dados iniciais...");
 
-  const hoje = new Date();
-  // Garante que criamos os 4 dias anteriores a HOJE como done (inclui ontem)
-  const streakDataInicial = {};
-  for (let i = 4; i >= 1; i--) {
-    const data = new Date(hoje);
-    data.setDate(hoje.getDate() - i);
-    const dataStr = data.toISOString().split("T")[0];
-    streakDataInicial[dataStr] = "done";
-  }
+const hoje = new Date();
+const regas = JSON.parse(localStorage.getItem("regas")) || {};
+const plantasIniciais = [
+{ id: "planta-1", nome: "Cacto" },
+{ id: "planta-2", nome: "Manjericão" },
+{ id: "planta-3", nome: "Lavanda" }
+];
 
-  // Hoje iniciamos como missed (o utilizador ainda não fez a ação hoje)
-  const hojeStr = hoje.toISOString().split("T")[0];
-  streakDataInicial[hojeStr] = "missed";
+// Garante que criamos os 4 dias anteriores a HOJE como done (inclui ontem)
+const streakDataInicial = {};
+for (let i = 4; i >= 1; i--) {
+const data = new Date(hoje);
+data.setDate(hoje.getDate() - i);
+const dataStr = data.toISOString().split("T")[0];
+streakDataInicial[dataStr] = "done";
 
-  // grava tudo no localStorage
-  localStorage.setItem("streakData", JSON.stringify(streakDataInicial));
-  localStorage.setItem("streakCount", "4");
-  // ultimoDiaContado fica como ontem (já contado)
-  const ontem = new Date(hoje);
-  ontem.setDate(hoje.getDate() - 1);
-  localStorage.setItem("ultimoDiaContado", ontem.toISOString().split("T")[0]);
-  localStorage.setItem("primeiraVez", "true"); // marca que já inicializou
-
-  console.log("✅ Dados iniciais criados:", streakDataInicial);
+// Adiciona as plantas iniciais como regadas nesses dias    
+regas[dataStr] = plantasIniciais.map(planta => ({ id: planta.id, nome: planta.nome }));    
 }
+
+// Hoje iniciamos como missed (o utilizador ainda não fez a ação hoje)
+const hojeStr = hoje.toISOString().split("T")[0];
+streakDataInicial[hojeStr] = "missed";
+
+// grava tudo no localStorage
+localStorage.setItem("streakData", JSON.stringify(streakDataInicial));
+localStorage.setItem("regas", JSON.stringify(regas));
+localStorage.setItem("streakCount", "4");
+// ultimoDiaContado fica como ontem (já contado)
+const ontem = new Date(hoje);
+ontem.setDate(hoje.getDate() - 1);
+localStorage.setItem("ultimoDiaContado", ontem.toISOString().split("T")[0]);
+localStorage.setItem("primeiraVez", "true"); // marca que já inicializou
+
+console.log("✅ Dados iniciais criados:", streakDataInicial);
+} 
 
 // Função que gera o calendário visual
 function generateCalendar() {
@@ -74,109 +86,105 @@ function generateCalendar() {
     calendar.appendChild(vazio);
   }
 
-  // Criar os dias do mês
-  for (let dia = 1; dia <= ultimoDia.getDate(); dia++) {
-    const dataAtual = new Date(ano, mes, dia);
-    const dataStr = `${ano}-${String(mes + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
-    const estado = streakData[dataStr] || null;
+  // Criar os dias do mês  
+  for (let dia = 1; dia <= ultimoDia.getDate(); dia++) {  
+    const dataAtual = new Date(ano, mes, dia);  
+    const dataStr = `${ano}-${String(mes + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;  
+    const estado = streakData[dataStr] || null;  
+  
+    const div = document.createElement("div");  
+    div.classList.add("day");  
+    div.textContent = dia;  
+    // --- CLIQUE EM UM DIA ---  
+    div.addEventListener("click", () => {  
+       abrirDiaCalendario(dataStr);  
+    });  
+  
+    const hojeStr = hoje.toISOString().split("T")[0];  
+  
+    // Dia atual  
+    if (dataStr === hojeStr) {  
+      div.classList.add("today");  
+    }  
+  
+    // Passados → cor conforme localStorage (ou missed por padrão)  
+    if (dataAtual < hoje) {  
+      if (estado) div.classList.add(estado);  
+      else div.classList.add("missed");  
+    }   
+    // Hoje e futuro → azul (visual)  
+    else {  
+      div.style.background = "#3b5bdb";  
+    }  
+  
+    calendar.appendChild(div);  
+  }  
+} 
 
-    const div = document.createElement("div");
-    div.classList.add("day");
-    div.textContent = dia;
-    // --- CLIQUE EM UM DIA ---
-    div.addEventListener("click", () => {
-       abrirDiaCalendario(dataStr);
-    });
-
-    const hojeStr = hoje.toISOString().split("T")[0];
-
-    // Dia atual
-    if (dataStr === hojeStr) {
-      div.classList.add("today");
-    }
-
-    // Passados → cor conforme localStorage (ou missed por padrão)
-    if (dataAtual < hoje) {
-      if (estado) div.classList.add(estado);
-      else div.classList.add("missed");
-    } 
-    // Hoje e futuro → azul (visual)
-    else {
-      div.style.background = "#3b5bdb";
-    }
-
-    calendar.appendChild(div);
-  }
-}
-
-function abrirDiaCalendario(dataStr) {
-    const painel = document.getElementById("painelDia");
-    const titulo = document.getElementById("painelData");
-    const lista = document.getElementById("listaPlantasDia");
-    const estadoDia = document.getElementById("estadoDia");
-    const btnLembrete = document.getElementById("btnCriarLembrete");
-
-    const plantas = JSON.parse(localStorage.getItem("plantas")) || [];
-    const regas = JSON.parse(localStorage.getItem("regas")) || {};
-    const streakData = JSON.parse(localStorage.getItem("streakData")) || {};
-
-    const hojeStr = new Date().toISOString().split("T")[0];
-    const hoje = new Date(hojeStr);
-    const dataSelecionada = new Date(dataStr);
-
-    // Mostrar data
-    titulo.textContent = `📅 ${dataStr}`;
-
-    // Estado do dia
-    const estado = streakData[dataStr] || "future";
-
-    const cores = {
-        done:  ["🟢 Dia concluído", "#2e7d32"],
-        partial: ["🟠 Parcial", "#f4a261"],
-        missed: ["🔴 Perdido", "#e63946"],
-        future: ["🔵 Dia futuro", "#3b5bdb"],
-        today: ["🟡 Hoje", "#f1c40f"]
-    };
-
-    let estadoFinal = estado;
-    if (dataStr === hojeStr) estadoFinal = "today";
-    if (dataSelecionada > hoje) estadoFinal = "future";
-
-    estadoDia.textContent = cores[estadoFinal][0];
-    estadoDia.style.background = cores[estadoFinal][1];
-    estadoDia.style.color = "#fff";
-
-    // Listar plantas tratadas
-    lista.innerHTML = "";
-    const regadas = regas[dataStr] || [];
-
-    if (regadas.length === 0) {
-        lista.innerHTML = "<li><span>😕</span> Nenhuma planta</li>";
-    } else {
-        plantas.forEach(planta => {
-            if (regadas.includes(planta.id)) {
-                const li = document.createElement("li");
-                li.innerHTML = `<span>🌱</span> ${planta.nome}`;
-                lista.appendChild(li);
-            }
-        });
-    }
-
-    // Mostrar botão de lembrete apenas para HOJE e FUTURO
-    if (dataSelecionada >= hoje) {
-        btnLembrete.classList.remove("hidden");
-        btnLembrete.onclick = () => criarLembreteParaData(dataStr);
-    } else {
-        btnLembrete.classList.add("hidden");
-    }
-
-    // Mostrar o painel
-    painel.classList.add("show");
-}
-
-document.getElementById("fecharPainel").addEventListener("click", () => {
-    document.getElementById("painelDia").classList.remove("show");
-});
+function abrirDiaCalendario(dataStr) {    
+    const painel = document.getElementById("painelDia");    
+    const titulo = document.getElementById("painelData");    
+    const lista = document.getElementById("listaPlantasDia");    
+    const estadoDia = document.getElementById("estadoDia");    
+    const btnLembrete = document.getElementById("btnCriarLembrete");    
+    
+    const regas = JSON.parse(localStorage.getItem("regas")) || {};    
+    const streakData = JSON.parse(localStorage.getItem("streakData")) || {};    
+    
+    const hojeStr = new Date().toISOString().split("T")[0];    
+    const hoje = new Date(hojeStr);    
+    const dataSelecionada = new Date(dataStr);    
+    
+    // Mostrar data    
+    titulo.textContent = `📅 ${dataStr}`;    
+    
+    // Estado do dia    
+    const estado = streakData[dataStr] || "future";    
+    
+    const cores = {    
+        done:  ["🟢 Dia concluído", "#2e7d32"],    
+        partial: ["🟠 Parcial", "#f4a261"],    
+        missed: ["🔴 Perdido", "#e63946"],    
+        future: ["🔵 Dia futuro", "#3b5bdb"],    
+        today: ["🟡 Hoje", "#f1c40f"]    
+    };    
+    
+    let estadoFinal = estado;    
+    if (dataStr === hojeStr) estadoFinal = "today";    
+    if (dataSelecionada > hoje) estadoFinal = "future";    
+    
+    estadoDia.textContent = cores[estadoFinal][0];    
+    estadoDia.style.background = cores[estadoFinal][1];    
+    estadoDia.style.color = "#fff";    
+    
+    // Listar plantas tratadas    
+    lista.innerHTML = "";    
+    const regadas = regas[dataStr] || [];    
+    
+    if (regadas.length === 0) {    
+        lista.innerHTML = "<li><span>😕</span> Nenhuma planta</li>";    
+    } else {    
+        regadas.forEach(planta => {    
+            const li = document.createElement("li");    
+            li.innerHTML = `<span>🌱</span> ${planta.nome}`;    
+            lista.appendChild(li);    
+        });    
+    }    
+    
+    // Mostrar botão de lembrete apenas para HOJE e FUTURO    
+    if (dataSelecionada >= hoje) {    
+        btnLembrete.classList.remove("hidden");    
+        btnLembrete.onclick = () => criarLembreteParaData(dataStr);    
+    } else {    
+        btnLembrete.classList.add("hidden");    
+    }    
+    
+    // Mostrar o painel    
+    painel.classList.add("show");    
+} 
+document.getElementById("fecharPainel").addEventListener("click", () => {    
+    document.getElementById("painelDia").classList.remove("show");    
+}); 
 
 
 

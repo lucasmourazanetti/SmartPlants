@@ -355,14 +355,17 @@ renderizar();
 const botaoRegar = document.getElementById("botao-regar");
 
 // 🔹 Função: Marca planta como regada no dia atual
-function marcarPlantaRegada(plantaId) {
+function marcarPlantaRegada(plantaId, plantaNome) {
   const hoje = new Date().toISOString().split("T")[0];
   const regas = JSON.parse(localStorage.getItem("regas")) || {};
 
   if (!regas[hoje]) regas[hoje] = [];
 
-  if (!regas[hoje].includes(plantaId)) {
-    regas[hoje].push(plantaId);
+  // Verifica se a planta já foi regada hoje
+  const jaRegada = regas[hoje].some((planta) => planta.id === plantaId);
+
+  if (!jaRegada) {
+    regas[hoje].push({ id: plantaId, nome: plantaNome });
   }
 
   localStorage.setItem("regas", JSON.stringify(regas));
@@ -376,9 +379,12 @@ function atualizarEstadoBotao(plantaId) {
   const regas = JSON.parse(localStorage.getItem("regas")) || {};
   const regadasHoje = regas[hoje] || [];
 
-  if (regadasHoje.includes(plantaId)) {
+  // Verifica se a planta foi regada hoje
+  const regada = regadasHoje.some((planta) => planta.id === plantaId);
+
+  if (regada) {
     botaoRegar.classList.add("regada");
-    botaoRegar.textContent = "✅ Regada!";
+    botaoRegar.textContent = "✅ Cuidada!";
   } else {
     botaoRegar.classList.remove("regada");
     botaoRegar.textContent = "Cuidar";
@@ -425,7 +431,7 @@ botaoRegar?.addEventListener("click", () => {
     localStorage.setItem("todasPlantas", JSON.stringify(plantas));
   }
 
-  marcarPlantaRegada(plantaAtual.id);
+  marcarPlantaRegada(plantaAtual.id, plantaAtual.nome);
   atualizarEstadoBotao(plantaAtual.id);
 });
 
