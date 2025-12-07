@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>SmartPlants — Plantas</title>
+  <title>SmartPlants – Plantas</title>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/loja_fontes.css" />
 </head>
@@ -28,19 +28,39 @@
     </header>
 
     <main class="conteudo">
+      <button id="reset-fonte" class="reset-btn">Restaurar fonte padrão</button>
+      
       <section id="lista-fontes" class="grade">
-            <button class="cartao" data-font="Comic Sans MS">Aa</button>
-            <button class="cartao" data-font="Determination">Aa</button>
-            <button class="cartao" data-font="Papyrus">Aa</button>
-        <button class="cartao" data-font="Jokerman">Aa</button>
-        <button class="cartao" data-font="Bebas Neue">Aa</button>
-        <button class="cartao" data-font="Satisfy">Aa</button>
-        <button class="cartao" data-font="Comfortaa">Aa</button>
-        <button class="cartao" data-font="Playfair Display">Aa</button>
+            <button class="cartao-fonte" data-font="Comic Sans MS">Aa</button>
+            <button class="cartao-fonte" data-font="Bauhaus93">Aa</button>
+            <button class="cartao-fonte" data-font="Papyrus">Aa</button>
+        <button class="cartao-fonte" data-font="Jokerman">Aa</button>
+        <button class="cartao-fonte" data-font="Magneto">Aa</button>
+        <button class="cartao-fonte" data-font="Determination">Aa</button>
+        <button class="cartao-fonte" data-font="Standard Galactic Alphabet"></button>
+        <button class="cartao-fonte" data-font="Wingdings">Aa</button>
       </section>
     </main>
   </div>
-  <script src="js/fontes.js"></script>
-  <script src="js/fundo.js"></script>
+  <div id="alert-modal" class="alert-modal hidden">
+  <div class="alert-box">
+    <p id="alert-text"></p>
+    <button id="alert-ok">OK</button>
+  </div>
+  </div>
+
+<div id="confirm-modal" class="alert-modal hidden">
+  <div class="alert-box">
+    <p id="confirm-text"></p>
+    <div style="display:flex; gap:12px; justify-content:center;">
+      <button id="confirm-yes">Sim</button>
+      <button id="confirm-no">Não</button>
+    </div>
+  </div>
+</div>
+
+<!-- ORDEM CORRIGIDA: fontes.js DEPOIS de fundo.js -->
+<script src="js/fontes.js"></script>
+<script src="js/fundo.js"></script>
 </body>
 </html>

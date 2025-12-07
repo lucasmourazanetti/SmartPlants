@@ -150,8 +150,20 @@ body {
   }
   .icone-opcao:hover{ transform:translateY(-1px); }
 
-  @font-face {
+@font-face {
   font-family: 'Determination';
   src: url('../fonts/DeterminationMonoWebRegular-Z5oq.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Standard Galactic Alphabet';
+  src: url('../fonts/sga-font.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Bauhaus93';
+  src: url('../fonts/Bauhaus93.ttf') format('truetype');
   font-display: swap;
 }
