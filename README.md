@@ -1,2 +1,4 @@
-Projeto do Grupo 20 de Interação com Computadores ( FCUL 2025/2026 )
-Francisco Sampaio, Gaspar Freitas, Lucas Zanetti e Rafael Silva 
+# SmartPlants
+### Um sistema para incentivar e monitorar o cuidado das suas plantas!
+####
+Lucas Zanetti, Francisco Sampaio, Gaspar Freitas e Rafael Silva 
